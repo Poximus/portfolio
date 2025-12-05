@@ -1,3 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Max Ariani Portfolio</title>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: white;
+    }
+
+    /* NAV */
+    nav {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      background: #000;
+      padding: 1rem;
+      display: flex;
+      justify-content: center;
+      gap: 2rem;
+      border-bottom: 1px solid #333;
+      z-index: 1000;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-size: 1.1rem;
+      cursor: pointer;
+    }
+
+    nav a:hover {
+      color: #0af;
+    }
+
+    /* SECCIONES */
+    .section {
+      display: none;
+      padding: 3rem 2rem 6rem;
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    .active {
+      display: block;
+    }
+
+    /* HOME */
+    .hero {
+      text-align: center;
+      padding: 4rem 1rem;
+    }
+
+    .hero img {
+      width: 100%;
+      max-width: 700px;
+      border-radius: 10px;
+      margin-bottom: 1.5rem;
+    }
+
+    .hero h1 {
+      font-size: 2.5rem;
+    }
+
+    /* MINIATURAS 3D */
+    .thumbs {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .thumb {
+      cursor: pointer;
+      border: 2px solid #222;
+      border-radius: 10px;
+      overflow: hidden;
+      transition: 0.2s;
+    }
+
+    .thumb:hover {
+      transform: scale(1.05);
+      border-color: #0af;
+    }
+
+    .thumb img {
+      width: 100%;
+      display: block;
+    }
+
+    /* VISOR 3D */
+    #viewer3d {
+      width: 100%;
+      height: 500px;
+      background: #000;
+      border-radius: 10px;
+      margin-bottom: 2rem;
+    }
+
+    /* FOOTER */
+    footer {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: #000;
+      padding: 1rem;
+      text-align: center;
+      border-top: 1px solid #333;
+    }
+
+    footer p {
+      margin: 0;
+    }
+
+    .social-icons {
+      display: flex;
+      justify-content: center;
+      gap: 1.2rem;
+      margin-top: 0.3rem;
+      font-size: 1.6rem;
+    }
+
+    .social-icons a {
+      color: white;
+    }
+
+    .social-icons a:hover {
+      color: #0af;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a onclick="showSection('home')">Home</a>
+    <a onclick="showSection('2d')">2D</a>
+    <a onclick="showSection('3d')">3D</a>
+    <a onclick="showSection('animacion')">Animación</a>
+    <a onclick="showSection('tech')">Tech Art</a>
+  </nav>
+
+  <!-- HOME -->
+  <section id="home" class="section active">
+    <div class="hero">
+      <img src="portada.jpg" alt="Portada">
+      <h1>Max Ariani Portfolio</h1>
+      <p>Artista 2D/3D — Modelado, Animación y Tech Art.</p>
+    </div>
+  </section>
+
+  <!-- 2D -->
+  <section id="2d" class="section">
+    <h2>Arte 2D</h2>
+    <div class="gallery">
+      <img src="2d1.jpg">
+      <img src="2d2.jpg">
+      <img src="2d3.jpg">
+    </div>
+  </section>
+
+  <!-- 3D -->
+  <section id="3d" class="section">
+    <h2>Modelos 3D</h2>
+
+    <!-- MINIATURAS -->
+    <div class="thumbs">
+      <!-- PODÉS AGREGAR MÁS MINIATURAS -->
+      <div class="thumb" onclick="loadModel('assets/models/compressed_Bull_Char_blended.glb')">
+        <img src="assets/thumbnails/bull.jpg" alt="">
+      </div>
+
+      <div class="thumb" onclick="loadModel('assets/models/model2.glb')">
+        <img src="assets/thumbnails/model2.jpg" alt="">
+      </div>
+
+      <div class="thumb" onclick="loadModel('assets/models/model3.glb')">
+        <img src="assets/thumbnails/model3.jpg" alt="">
+      </div>
+    </div>
+
+    <!-- VISOR -->
+    <div id="viewer3d"></div>
+  </section>
+
+  <!-- ANIMACIÓN -->
+  <section id="animacion" class="section">
+    <h2>Animación</h2>
+    <div class="gallery">
+      <video src="anim1.mp4" controls></video>
+      <video src="anim2.mp4" controls></video>
+    </div>
+  </section>
+
+  <!-- TECH ART -->
+  <section id="tech" class="section">
+    <h2>Tech Art</h2>
+    <div class="gallery">
+      <img src="tech1.jpg">
+      <video src="tech2.mp4" controls></video>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p style="font-weight: bold; margin-bottom: .5rem;">Contact</p>
+
+    <div class="social-icons">
+      <a href="https://instagram.com/tuusuario"><i class="fab fa-instagram"></i></a>
+      <a href="https://artstation.com/tuusuario"><i class="fab fa-artstation"></i></a>
+      <a href="mailto:email@example.com"><i class="fas fa-envelope"></i></a>
+    </div>
+
+    <p style="margin-top: .5rem; color:#777;">© 2025 Tu Nombre</p>
+  </footer>
+
+ <!-- THREE JS / VIEWER -->
 <script type="module">
 import * as THREE from 'https://esm.run/three';
 import { OrbitControls } from 'https://esm.run/three/examples/jsm/controls/OrbitControls';
@@ -186,3 +411,8 @@ if (document.getElementById('3d').classList.contains('active')) {
   setTimeout(()=> initViewer(), 80);
 }
 </script>
+
+
+
+</body>
+</html>
