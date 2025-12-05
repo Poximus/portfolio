@@ -185,22 +185,24 @@
   </div>
 </section>
 <!-- 2D -->
+<!-- 2D -->
 <section id="2d" class="section">
   <h2>Galería 2D</h2>
 
-  <div class="carousel">
-    <button class="carousel-btn prev" onclick="prevSlide()">&#10094;</button>
+  <!-- Imagen principal -->
+  <div class="main-image-container">
+    <img id="mainImage" src="assets/2d/img1.jpg">
+  </div>
 
-    <div class="carousel-track">
-      <img src="assets/2d/img1.png" alt="">
-      <img src="assets/2d/img2.png" alt="">
-      <img src="assets/2d/img3.png" alt="">
-      <img src="assets/2d/img4.png" alt="">
-    </div>
-
-    <button class="carousel-btn next" onclick="nextSlide()">&#10095;</button>
+  <!-- Thumbnails -->
+  <div class="thumb-strip">
+    <img class="thumb2d" src="assets/2d/img1.png" onclick="setMainImage('assets/2d/img1.png')">
+    <img class="thumb2d" src="assets/2d/img2.png" onclick="setMainImage('assets/2d/img2.png')">
+    <img class="thumb2d" src="assets/2d/img3.png" onclick="setMainImage('assets/2d/img3.png')">
+    <img class="thumb2d" src="assets/2d/img4.png" onclick="setMainImage('assets/2d/img4.png')">
   </div>
 </section>
+
 
   
 <!-- 3D -->
