@@ -35,10 +35,7 @@
       font-size: 1.1rem;
       cursor: pointer;
     }
-
-    nav a:hover {
-      color: #0af;
-    }
+    nav a:hover { color: #0af; }
 
     /* SECCIONES */
     .section {
@@ -47,372 +44,269 @@
       max-width: 1000px;
       margin: auto;
     }
+    .active { display:block; }
 
-    .active {
-      display: block;
-    }
-
-    /* HOME */
-    .hero {
-      text-align: center;
-      padding: 4rem 1rem;
-    }
-
-    .hero img {
-      width: 100%;
-      max-width: 700px;
-      border-radius: 10px;
-      margin-bottom: 1.5rem;
-    }
-
-    .hero h1 {
-      font-size: 2.5rem;
-    }
-
-    /* MINIATURAS 3D */
+    /* MINIATURAS */
     .thumbs {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
       gap: 1rem;
       margin-bottom: 2rem;
     }
-
-    .thumb {
-      cursor: pointer;
-      border: 2px solid #222;
-      border-radius: 10px;
-      overflow: hidden;
-      transition: 0.2s;
-    }
-
-    .thumb:hover {
-      transform: scale(1.05);
-      border-color: #0af;
-    }
-
-    .thumb img {
-      width: 100%;
-      display: block;
-    }
+    .thumb { cursor:pointer; border:2px solid #222; border-radius:10px; overflow:hidden; transition:0.2s; }
+    .thumb:hover { transform:scale(1.05); border-color:#0af; }
+    .thumb img { width:100%; display:block; }
 
     /* VISOR 3D */
     #viewer3d {
-      width: 100%;
-      height: 500px;
-      background: #000;
-      border-radius: 10px;
-      margin-bottom: 2rem;
+      width:100%;
+      height:500px;
+      background:#000;
+      border-radius:10px;
+      margin-bottom:1rem;
+      position:relative;
     }
+
+    /* LOADING SPINNER */
+    #loadingSpinner {
+      position:absolute;
+      top:50%; left:50%;
+      transform:translate(-50%, -50%);
+      width:60px; height:60px;
+      border:6px solid #333;
+      border-top:6px solid #0af;
+      border-radius:50%;
+      animation:spin 0.9s linear infinite;
+      display:none;
+    }
+    @keyframes spin {
+      to { transform:translate(-50%, -50%) rotate(360deg); }
+    }
+
+    /* BOTONES DE LUZ */
+    #lightButtons {
+      margin-bottom:1rem;
+      display:flex;
+      gap:10px;
+      justify-content:center;
+    }
+    .light-btn {
+      padding:8px 14px;
+      background:#222;
+      border:1px solid #444;
+      cursor:pointer;
+      border-radius:5px;
+      color:#ddd;
+    }
+    .light-btn:hover { background:#0af; color:#000; }
 
     /* FOOTER */
     footer {
-      position: fixed;
-      bottom: 0;
-      width: 100%;
-      background: #000;
-      padding: 1rem;
-      text-align: center;
-      border-top: 1px solid #333;
+      position:fixed;
+      bottom:0;
+      width:100%;
+      background:#000;
+      padding:1rem;
+      text-align:center;
+      border-top:1px solid #333;
     }
-
-    footer p {
-      margin: 0;
-    }
-
     .social-icons {
-      display: flex;
-      justify-content: center;
-      gap: 1.2rem;
-      margin-top: 0.3rem;
-      font-size: 1.6rem;
-    }
-
-    .social-icons a {
-      color: white;
-    }
-
-    .social-icons a:hover {
-      color: #0af;
+      display:flex;
+      justify-content:center;
+      gap:1.2rem;
+      margin-top:0.3rem;
+      font-size:1.6rem;
     }
   </style>
 </head>
 
 <body>
 
-  <!-- NAV -->
-  <nav>
-    <a onclick="showSection('home')">Home</a>
-    <a onclick="showSection('2d')">2D</a>
-    <a onclick="showSection('3d')">3D</a>
-    <a onclick="showSection('animacion')">Animación</a>
-    <a onclick="showSection('tech')">Tech Art</a>
-  </nav>
+<!-- NAV -->
+<nav>
+  <a onclick="showSection('home')">Home</a>
+  <a onclick="showSection('2d')">2D</a>
+  <a onclick="showSection('3d')">3D</a>
+  <a onclick="showSection('animacion')">Animación</a>
+  <a onclick="showSection('tech')">Tech Art</a>
+</nav>
 
-  <!-- HOME -->
-  <section id="home" class="section active">
-    <div class="hero">
-      <img src="portada.jpg" alt="Portada">
-      <h1>Max Ariani Portfolio</h1>
-      <p>Artista 2D/3D — Modelado, Animación y Tech Art.</p>
-    </div>
-  </section>
+<!-- HOME -->
+<section id="home" class="section active">
+  <div class="hero">
+    <img src="portada.jpg" alt="Portada" style="width:100%; max-width:700px; border-radius:10px;">
+    <h1>Max Ariani Portfolio</h1>
+    <p>Artista 2D/3D — Modelado, Animación y Tech Art.</p>
+  </div>
+</section>
 
-  <!-- 2D -->
-  <section id="2d" class="section">
-    <h2>Arte 2D</h2>
-    <div class="gallery">
-      <img src="2d1.jpg">
-      <img src="2d2.jpg">
-      <img src="2d3.jpg">
-    </div>
-  </section>
+<!-- 3D -->
+<section id="3d" class="section">
+  <h2>Modelos 3D</h2>
 
-  <!-- 3D -->
-  <section id="3d" class="section">
-    <h2>Modelos 3D</h2>
-
-    <!-- MINIATURAS -->
-    <div class="thumbs">
-      <!-- PODÉS AGREGAR MÁS MINIATURAS -->
-      <div class="thumb" onclick="loadModel('assets/models/compressed_Bull_Char_blended.glb')">
-        <img src="assets/thumbnails/bull.jpg" alt="">
-      </div>
-
-      <div class="thumb" onclick="loadModel('assets/models/model2.glb')">
-        <img src="assets/thumbnails/model2.jpg" alt="">
-      </div>
-
-      <div class="thumb" onclick="loadModel('assets/models/model3.glb')">
-        <img src="assets/thumbnails/model3.jpg" alt="">
-      </div>
+  <!-- MINIATURAS -->
+  <div class="thumbs">
+    <div class="thumb" onclick="loadModel('assets/models/modelo1.glb')">
+      <img src="assets/thumbnails/model1.jpg">
     </div>
 
-    <!-- VISOR -->
-    <div id="viewer3d"></div>
-  </section>
-
-  <!-- ANIMACIÓN -->
-  <section id="animacion" class="section">
-    <h2>Animación</h2>
-    <div class="gallery">
-      <video src="anim1.mp4" controls></video>
-      <video src="anim2.mp4" controls></video>
-    </div>
-  </section>
-
-  <!-- TECH ART -->
-  <section id="tech" class="section">
-    <h2>Tech Art</h2>
-    <div class="gallery">
-      <img src="tech1.jpg">
-      <video src="tech2.mp4" controls></video>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer>
-    <p style="font-weight: bold; margin-bottom: .5rem;">Contact</p>
-
-    <div class="social-icons">
-      <a href="https://instagram.com/tuusuario"><i class="fab fa-instagram"></i></a>
-      <a href="https://artstation.com/tuusuario"><i class="fab fa-artstation"></i></a>
-      <a href="mailto:email@example.com"><i class="fas fa-envelope"></i></a>
+    <div class="thumb" onclick="loadModel('assets/models/modelo2.glb')">
+      <img src="assets/thumbnails/model2.jpg">
     </div>
 
-    <p style="margin-top: .5rem; color:#777;">© 2025 Tu Nombre</p>
-  </footer>
+    <div class="thumb" onclick="loadModel('assets/models/modelo3.glb')">
+      <img src="assets/thumbnails/model3.jpg">
+    </div>
+  </div>
 
- <!-- THREE JS / VIEWER -->
+  <!-- PANEL DE LUZ -->
+  <div id="lightButtons">
+    <button class="light-btn" onclick="setLightMode('studio')">Studio</button>
+    <button class="light-btn" onclick="setLightMode('warm')">Warm</button>
+    <button class="light-btn" onclick="setLightMode('cool')">Cool</button>
+  </div>
+
+  <!-- VISOR -->
+  <div id="viewer3d">
+    <div id="loadingSpinner"></div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p style="font-weight:bold;">Contact</p>
+  <div class="social-icons">
+    <a href="#"><i class="fab fa-instagram"></i></a>
+    <a href="#"><i class="fab fa-artstation"></i></a>
+    <a href="#"><i class="fas fa-envelope"></i></a>
+  </div>
+</footer>
+
+<!-- THREE JS -->
 <script type="module">
-import * as THREE from 'https://esm.run/three';
-import { OrbitControls } from 'https://esm.run/three/examples/jsm/controls/OrbitControls';
-import { GLTFLoader } from 'https://esm.run/three/examples/jsm/loaders/GLTFLoader';
-import { DRACOLoader } from 'https://esm.run/three/examples/jsm/loaders/DRACOLoader';
+import * as THREE from "https://esm.run/three";
+import { OrbitControls } from "https://esm.run/three/examples/jsm/controls/OrbitControls";
+import { GLTFLoader } from "https://esm.run/three/examples/jsm/loaders/GLTFLoader";
+import { DRACOLoader } from "https://esm.run/three/examples/jsm/loaders/DRACOLoader";
+import { RGBELoader } from "https://esm.run/three/examples/jsm/loaders/RGBELoader";
 
-// referencias DOM
-const container = document.getElementById('viewer3d');
 let scene, camera, renderer, controls;
 let gltfLoader, dracoLoader;
-let viewerInitialized = false;
 let currentModel = null;
+let mixer = null;
 
-// --- utilities ---
-function showConsoleError(msg, err) {
-  console.error(msg, err || '');
-  // opcional: mostrar UI si querés
-}
+// luces
+let hemi, dir;
 
-// dispose helper
-function disposeObject(obj) {
-  if (!obj) return;
-  obj.traverse((child) => {
-    if (child.isMesh) {
-      if (child.geometry) child.geometry.dispose();
-      if (child.material) {
-        const mat = child.material;
-        if (Array.isArray(mat)) {
-          mat.forEach(m => {
-            if (m.map) m.map.dispose();
-            m.dispose();
-          });
-        } else {
-          if (mat.map) mat.map.dispose();
-          mat.dispose();
-        }
-      }
-    }
-  });
-}
+// HDRI
+let envMap = null;
 
-// --- inicializar viewer (solo una vez) ---
+const container = document.getElementById("viewer3d");
+const spinner = document.getElementById("loadingSpinner");
+
 function initViewer() {
-  // si ya inicializado, solo ajustar tamaño
-  if (viewerInitialized) {
-    onWindowResize();
-    return;
-  }
+  if (scene) return;
 
-  // crear escena/camara/renderer
   scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x000000);
 
-  // medidas seguras si el contenedor está oculto momentáneamente
-  const w = Math.max(320, container.clientWidth || window.innerWidth);
-  const h = Math.max(240, Math.round(window.innerHeight * 0.6));
+  camera = new THREE.PerspectiveCamera(50, container.clientWidth / container.clientHeight, 0.1, 200);
+  camera.position.set(0,1.5,3);
 
-  camera = new THREE.PerspectiveCamera(50, w / h, 0.05, 2000);
-  camera.position.set(0, 1.5, 3);
-
-  renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
-  renderer.setSize(w, h, false);
-  renderer.outputEncoding = THREE.sRGBEncoding;
-
-  // limpiar e insertar canvas
-  container.innerHTML = '';
+  renderer = new THREE.WebGLRenderer({ antialias:true });
+  renderer.setSize(container.clientWidth, container.clientHeight);
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
   container.appendChild(renderer.domElement);
 
-  // controles
   controls = new OrbitControls(camera, renderer.domElement);
-  controls.target.set(0, 0.7, 0);
-  controls.update();
 
-  // luces basicas
-  const hemi = new THREE.HemisphereLight(0xffffff, 0x444444, 1.0);
-  scene.add(hemi);
-  const dir = new THREE.DirectionalLight(0xffffff, 0.9);
-  dir.position.set(5, 10, 7);
-  scene.add(dir);
+  // --- HDRI ---
+  new RGBELoader()
+    .setPath("assets/hdri/")
+    .load("studio_small_08_1k.hdr", (hdr)=>{
+      let pmrem = new THREE.PMREMGenerator(renderer);
+      envMap = pmrem.fromEquirectangular(hdr).texture;
+      scene.environment = envMap;
+    });
 
-  // DRACO + GLTF loader (IMPORTANTE para modelos draco-compressed)
-  dracoLoader = new DRACOLoader();
-  // usar decoders públicos (Google). Si querés, podés subir los decoders a tu repo y apuntar ahí.
-  dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/');
+  // luces por defecto
+  hemi = new THREE.HemisphereLight(0xffffff, 0x444444, 1);
+  dir = new THREE.DirectionalLight(0xffffff, 1);
+  dir.position.set(5,10,7);
+  scene.add(hemi, dir);
 
+  // loaders
+  dracoLoader = new DRACOLoader().setDecoderPath("https://www.gstatic.com/draco/v1/decoders/");
   gltfLoader = new GLTFLoader();
   gltfLoader.setDRACOLoader(dracoLoader);
 
-  // listeners
-  window.addEventListener('resize', onWindowResize);
-
-  viewerInitialized = true;
   animate();
 }
 
-// --- resize ---
-function onWindowResize() {
-  if (!renderer || !camera) return;
-  const w = Math.max(320, container.clientWidth || window.innerWidth);
-  const h = Math.max(240, Math.round(window.innerHeight * 0.6));
-  camera.aspect = w / h;
-  camera.updateProjectionMatrix();
-  renderer.setSize(w, h, false);
-}
-
-// --- loop ---
 function animate() {
   requestAnimationFrame(animate);
-  if (renderer && scene && camera) renderer.render(scene, camera);
+  if (mixer) mixer.update(0.016);
+  renderer.render(scene, camera);
 }
 
-// --- cargar modelo ---
-window.loadModel = function(path) {
-  if (!viewerInitialized) initViewer();
+window.loadModel = (path)=>{
+  initViewer();
+  spinner.style.display = "block";
 
-  // limpiar modelo anterior
   if (currentModel) {
     scene.remove(currentModel);
-    disposeObject(currentModel);
     currentModel = null;
   }
 
-  // Indicador simple en consola
-  console.log('Cargando GLB:', path);
+  gltfLoader.load(path, (gltf)=>{
 
-  gltfLoader.load(
-    path,
-    (gltf) => {
-      currentModel = gltf.scene;
-      // normalizar escala y centro
-      const box = new THREE.Box3().setFromObject(currentModel);
-      const size = box.getSize(new THREE.Vector3());
-      const maxDim = Math.max(size.x, size.y, size.z);
-      const scale = maxDim > 0 ? (1.6 / maxDim) : 1;
-      currentModel.scale.setScalar(scale);
+    spinner.style.display = "none";
+    currentModel = gltf.scene;
 
-      // recenter
-      box.setFromObject(currentModel);
-      const center = box.getCenter(new THREE.Vector3());
-      currentModel.position.sub(center);
+    // Animaciones →
+    mixer = gltf.animations.length > 0 ? new THREE.AnimationMixer(gltf.scene) : null;
+    if (mixer) mixer.clipAction(gltf.animations[0]).play();
 
-      scene.add(currentModel);
+    // Normalizar escala
+    const box = new THREE.Box3().setFromObject(currentModel);
+    const size = box.getSize(new THREE.Vector3());
+    const scale = 1.6 / Math.max(size.x, size.y, size.z);
+    currentModel.scale.setScalar(scale);
+    box.setFromObject(currentModel);
+    const center = box.getCenter(new THREE.Vector3());
+    currentModel.position.sub(center);
 
-      // ajustar cámara para encuadrar
-      const dist = Math.max(1.2, 2.0 / scale);
-      camera.position.set(dist, dist, dist);
-      controls.target.set(0, 0, 0);
-      controls.update();
-
-      console.log('Modelo cargado OK');
-    },
-    (xhr) => {
-      // progreso (opcional)
-      if (xhr.total) {
-        const pct = Math.round((xhr.loaded / xhr.total) * 100);
-        // console.log(`Progreso: ${pct}%`);
-      }
-    },
-    (err) => {
-      showConsoleError('Error cargando GLB', err);
-      alert('Error cargando modelo (mira la consola). Puede estar corrupto o la ruta ser incorrecta.');
-    }
-  );
+    scene.add(currentModel);
+  });
 };
 
-// --- navegación de pestañas ---
-window.showSection = function(id) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  const sec = document.getElementById(id);
-  if (!sec) return;
-  sec.classList.add('active');
-  window.scrollTo(0, 0);
+window.setLightMode = (mode)=>{
+  switch(mode){
+    case "studio":
+      hemi.intensity = 1;
+      hemi.color.set(0xffffff);
+      dir.intensity = 1;
+      dir.color.set(0xffffff);
+      break;
 
-  // si abrimos 3D, inicializamos viewer (con pequeño delay para que el contenedor sea visible)
-  if (id === '3d') {
-    setTimeout(() => {
-      initViewer();
-      onWindowResize();
-    }, 80);
+    case "warm":
+      hemi.color.set(0xffbb66);
+      dir.color.set(0xffaa55);
+      break;
+
+    case "cool":
+      hemi.color.set(0x99bbff);
+      dir.color.set(0x88aaff);
+      break;
   }
 };
 
-// inicial: si el usuario llega directo a la tab 3d
-if (document.getElementById('3d').classList.contains('active')) {
-  setTimeout(()=> initViewer(), 80);
-}
+window.showSection = (id)=>{
+  document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  window.scrollTo(0,0);
+  if (id === "3d") setTimeout(()=>initViewer(), 100);
+};
 </script>
-
-
 
 </body>
 </html>
