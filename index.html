@@ -393,6 +393,28 @@ window.showSection = (id) => {
     loadModel("assets/models/compressed_Bull_Char_blended.glb");
   }
 };
+// carrusel 2d
+  /* --- CARRUSEL 2D --- */
+let currentSlide = 0;
+let totalSlides = 4; // cambiá según cuántas imágenes tengas
+
+window.updateCarousel = ()=>{
+  const track = document.querySelector(".carousel-track");
+  const width = document.querySelector(".carousel").clientWidth;
+  track.style.transform = `translateX(${-currentSlide * width}px)`;
+};
+
+window.nextSlide = ()=>{
+  currentSlide = (currentSlide + 1) % totalSlides;
+  updateCarousel();
+};
+
+window.prevSlide = ()=>{
+  currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+  updateCarousel();
+};
+
+window.addEventListener("resize", updateCarousel);
 
 </script>
 
