@@ -306,6 +306,24 @@ window.showSection = (id)=>{
   window.scrollTo(0,0);
   if (id === "3d") setTimeout(()=>initViewer(), 100);
 };
+  // Cargar automáticamente el primer modelo al entrar en la sección 3D por primera vez
+let firstModelLoaded = false;
+
+const originalShowSection = window.showSection;
+window.showSection = (id) => {
+  originalShowSection(id);
+
+  if (id === "3d" && !firstModelLoaded) {
+    firstModelLoaded = true;
+
+    // Iniciar visor si aún no se creó
+    initViewer();
+
+    // Cargar el primer modelo
+    loadModel("assets/models/compressed_Bull_Char_blended.glb");
+  }
+};
+
 </script>
 
 </body>
