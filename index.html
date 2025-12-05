@@ -117,6 +117,51 @@
       margin-top:0.3rem;
       font-size:1.6rem;
     }
+    /* CARRUSEL 2D */
+.carousel {
+  position: relative;
+  width: 100%;
+  max-width: 900px;
+  margin: auto;
+  overflow: hidden;
+  border-radius: 10px;
+  border: 2px solid #222;
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform 0.5s ease;
+}
+
+.carousel-track img {
+  width: 100%;
+  flex-shrink: 0;
+  border-right: 2px solid #000;
+  user-select: none;
+}
+
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0,0,0,0.6);
+  border: none;
+  padding: 12px 18px;
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
+  z-index: 10;
+  border-radius: 6px;
+}
+
+.carousel-btn:hover {
+  background: #0af;
+  color: #000;
+}
+
+.carousel-btn.prev { left: 10px; }
+.carousel-btn.next { right: 10px; }
+
   </style>
 </head>
 
@@ -139,7 +184,25 @@
     <p>Artista 2D/3D — Modelado, Animación y Tech Art.</p>
   </div>
 </section>
+<!-- 2D -->
+<section id="2d" class="section">
+  <h2>Galería 2D</h2>
 
+  <div class="carousel">
+    <button class="carousel-btn prev" onclick="prevSlide()">&#10094;</button>
+
+    <div class="carousel-track">
+      <img src="assets/2d/img1.jpg" alt="">
+      <img src="assets/2d/img2.jpg" alt="">
+      <img src="assets/2d/img3.jpg" alt="">
+      <img src="assets/2d/img4.jpg" alt="">
+    </div>
+
+    <button class="carousel-btn next" onclick="nextSlide()">&#10095;</button>
+  </div>
+</section>
+
+  
 <!-- 3D -->
 <section id="3d" class="section">
   <h2>Modelos 3D</h2>
