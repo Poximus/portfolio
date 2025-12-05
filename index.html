@@ -194,6 +194,7 @@ let scene, camera, renderer, controls;
 let gltfLoader, dracoLoader;
 let currentModel = null;
 let mixer = null;
+let clock = new THREE.Clock();
 
 // luces
 let hemi, dir;
@@ -244,8 +245,10 @@ function initViewer() {
 
 function animate() {
   requestAnimationFrame(animate);
-  if (mixer) mixer.update(0.016);
+  let delta = clock.getDelta();
+  if (mixer) mixer.update(delta);
   renderer.render(scene, camera);
+  
 }
 
 window.loadModel = (path)=>{
