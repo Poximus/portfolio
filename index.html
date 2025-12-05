@@ -1,192 +1,188 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio 3D</title>
-
-    <!-- THREE.JS (última versión CDN oficial) -->
-    <script type="module" src="https://cdn.jsdelivr.net/npm/three@latest/build/three.module.js"></script>
-    <script type="module" src="https://cdn.jsdelivr.net/npm/three@latest/examples/jsm/loaders/GLTFLoader.js"></script>
-    <script type="module" src="https://cdn.jsdelivr.net/npm/three@latest/examples/jsm/loaders/RGBELoader.js"></script>
-    <script type="module" src="https://cdn.jsdelivr.net/npm/three@latest/examples/jsm/controls/OrbitControls.js"></script>
-
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #111;
-            color: #fff;
-        }
-
-        header {
-            position: sticky;
-            top: 0;
-            background: #000;
-            padding: 15px 0;
-            text-align: center;
-            z-index: 1000;
-        }
-
-        header a {
-            margin: 0 20px;
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-        }
-
-        .gallery {
-            display: flex;
-            gap: 20px;
-            padding: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .thumb {
-            width: 160px;
-            height: 160px;
-            background: #222;
-            border-radius: 10px;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            border: 2px solid #333;
-            transition: 0.2s;
-        }
-
-        .thumb:hover {
-            border: 2px solid #fff;
-            transform: scale(1.05);
-        }
-
-        #viewer-container {
-            width: 100%;
-            height: 500px;
-            background: #000;
-        }
-
-        footer {
-            position: sticky;
-            bottom: 0;
-            background: #000;
-            padding: 20px;
-            text-align: center;
-            border-top: 1px solid #333;
-        }
-
-        footer p {
-            opacity: 0.7;
-        }
-    </style>
-</head>
-<body>
-
-<header>
-    <a href="#">Home</a>
-    <a href="#gallery">3D</a>
-    <a href="#contact">Contact</a>
-</header>
-
-<section id="gallery">
-    <h2 style="text-align:center;">Modelos 3D</h2>
-
-    <div class="gallery">
-        <div class="thumb" onclick="loadModel('compressed_Bull_Char_blended.glb')">Modelo 1</div>
-        <div class="thumb" onclick="loadModel('modelo2.glb')">Modelo 2</div>
-        <div class="thumb" onclick="loadModel('modelo3.glb')">Modelo 3</div>
-    </div>
-
-    <div id="viewer-container"></div>
-</section>
-
-<footer id="contact">
-    <h3>Contact</h3>
-    <p>Mis redes sociales aquí</p>
-</footer>
-
-<!-- SCRIPT DEL VIEWER -->
 <script type="module">
-    import * as THREE from "https://cdn.jsdelivr.net/npm/three@latest/build/three.module.js";
-    import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@latest/examples/jsm/loaders/GLTFLoader.js";
-    import { RGBELoader } from "https://cdn.jsdelivr.net/npm/three@latest/examples/jsm/loaders/RGBELoader.js";
-    import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@latest/examples/jsm/controls/OrbitControls.js";
+import * as THREE from 'https://esm.run/three';
+import { OrbitControls } from 'https://esm.run/three/examples/jsm/controls/OrbitControls';
+import { GLTFLoader } from 'https://esm.run/three/examples/jsm/loaders/GLTFLoader';
+import { DRACOLoader } from 'https://esm.run/three/examples/jsm/loaders/DRACOLoader';
 
-    let scene, camera, renderer, controls, currentModel;
+// referencias DOM
+const container = document.getElementById('viewer3d');
+let scene, camera, renderer, controls;
+let gltfLoader, dracoLoader;
+let viewerInitialized = false;
+let currentModel = null;
 
-    const container = document.getElementById("viewer-container");
+// --- utilities ---
+function showConsoleError(msg, err) {
+  console.error(msg, err || '');
+  // opcional: mostrar UI si querés
+}
 
-    function initViewer() {
-        if (!renderer) {
-            renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(container.clientWidth, container.clientHeight);
-            renderer.setPixelRatio(window.devicePixelRatio);
-            renderer.outputEncoding = THREE.sRGBEncoding;
-            container.appendChild(renderer.domElement);
+// dispose helper
+function disposeObject(obj) {
+  if (!obj) return;
+  obj.traverse((child) => {
+    if (child.isMesh) {
+      if (child.geometry) child.geometry.dispose();
+      if (child.material) {
+        const mat = child.material;
+        if (Array.isArray(mat)) {
+          mat.forEach(m => {
+            if (m.map) m.map.dispose();
+            m.dispose();
+          });
+        } else {
+          if (mat.map) mat.map.dispose();
+          mat.dispose();
         }
-
-        scene = new THREE.Scene();
-
-        camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
-        camera.position.set(3, 2, 5);
-
-        controls = new OrbitControls(camera, renderer.domElement);
-        controls.enableDamping = true;
-        controls.autoRotate = true;
-        controls.autoRotateSpeed = 2;
-
-        new RGBELoader()
-            .setPath("assets/")
-            .load("studio_small_03_1k.hdr", function (texture) {
-                texture.mapping = THREE.EquirectangularReflectionMapping;
-                scene.environment = texture;
-            });
-
-        animate();
+      }
     }
+  });
+}
 
-    function loadModel(name) {
-        const loader = new GLTFLoader();
+// --- inicializar viewer (solo una vez) ---
+function initViewer() {
+  // si ya inicializado, solo ajustar tamaño
+  if (viewerInitialized) {
+    onWindowResize();
+    return;
+  }
 
-        if (currentModel) {
-            scene.remove(currentModel);
-            currentModel = null;
-        }
+  // crear escena/camara/renderer
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x000000);
 
-        loader.load(
-            `assets/models/${name}`,
-            gltf => {
-                currentModel = gltf.scene;
-                scene.add(currentModel);
+  // medidas seguras si el contenedor está oculto momentáneamente
+  const w = Math.max(320, container.clientWidth || window.innerWidth);
+  const h = Math.max(240, Math.round(window.innerHeight * 0.6));
 
-                currentModel.rotation.y = Math.PI;
+  camera = new THREE.PerspectiveCamera(50, w / h, 0.05, 2000);
+  camera.position.set(0, 1.5, 3);
 
-                const box = new THREE.Box3().setFromObject(currentModel);
-                const size = box.getSize(new THREE.Vector3()).length();
-                const center = box.getCenter(new THREE.Vector3());
+  renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.setSize(w, h, false);
+  renderer.outputEncoding = THREE.sRGBEncoding;
 
-                currentModel.position.x += (currentModel.position.x - center.x);
-                currentModel.position.y += (currentModel.position.y - center.y);
-                currentModel.position.z += (currentModel.position.z - center.z);
+  // limpiar e insertar canvas
+  container.innerHTML = '';
+  container.appendChild(renderer.domElement);
 
-                camera.position.set(size, size, size);
-                controls.update();
-            },
-            undefined,
-            err => console.error("Error cargando modelo:", err)
-        );
+  // controles
+  controls = new OrbitControls(camera, renderer.domElement);
+  controls.target.set(0, 0.7, 0);
+  controls.update();
+
+  // luces basicas
+  const hemi = new THREE.HemisphereLight(0xffffff, 0x444444, 1.0);
+  scene.add(hemi);
+  const dir = new THREE.DirectionalLight(0xffffff, 0.9);
+  dir.position.set(5, 10, 7);
+  scene.add(dir);
+
+  // DRACO + GLTF loader (IMPORTANTE para modelos draco-compressed)
+  dracoLoader = new DRACOLoader();
+  // usar decoders públicos (Google). Si querés, podés subir los decoders a tu repo y apuntar ahí.
+  dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/');
+
+  gltfLoader = new GLTFLoader();
+  gltfLoader.setDRACOLoader(dracoLoader);
+
+  // listeners
+  window.addEventListener('resize', onWindowResize);
+
+  viewerInitialized = true;
+  animate();
+}
+
+// --- resize ---
+function onWindowResize() {
+  if (!renderer || !camera) return;
+  const w = Math.max(320, container.clientWidth || window.innerWidth);
+  const h = Math.max(240, Math.round(window.innerHeight * 0.6));
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  renderer.setSize(w, h, false);
+}
+
+// --- loop ---
+function animate() {
+  requestAnimationFrame(animate);
+  if (renderer && scene && camera) renderer.render(scene, camera);
+}
+
+// --- cargar modelo ---
+window.loadModel = function(path) {
+  if (!viewerInitialized) initViewer();
+
+  // limpiar modelo anterior
+  if (currentModel) {
+    scene.remove(currentModel);
+    disposeObject(currentModel);
+    currentModel = null;
+  }
+
+  // Indicador simple en consola
+  console.log('Cargando GLB:', path);
+
+  gltfLoader.load(
+    path,
+    (gltf) => {
+      currentModel = gltf.scene;
+      // normalizar escala y centro
+      const box = new THREE.Box3().setFromObject(currentModel);
+      const size = box.getSize(new THREE.Vector3());
+      const maxDim = Math.max(size.x, size.y, size.z);
+      const scale = maxDim > 0 ? (1.6 / maxDim) : 1;
+      currentModel.scale.setScalar(scale);
+
+      // recenter
+      box.setFromObject(currentModel);
+      const center = box.getCenter(new THREE.Vector3());
+      currentModel.position.sub(center);
+
+      scene.add(currentModel);
+
+      // ajustar cámara para encuadrar
+      const dist = Math.max(1.2, 2.0 / scale);
+      camera.position.set(dist, dist, dist);
+      controls.target.set(0, 0, 0);
+      controls.update();
+
+      console.log('Modelo cargado OK');
+    },
+    (xhr) => {
+      // progreso (opcional)
+      if (xhr.total) {
+        const pct = Math.round((xhr.loaded / xhr.total) * 100);
+        // console.log(`Progreso: ${pct}%`);
+      }
+    },
+    (err) => {
+      showConsoleError('Error cargando GLB', err);
+      alert('Error cargando modelo (mira la consola). Puede estar corrupto o la ruta ser incorrecta.');
     }
+  );
+};
 
-    function animate() {
-        requestAnimationFrame(animate);
-        controls.update();
-        renderer.render(scene, camera);
-    }
+// --- navegación de pestañas ---
+window.showSection = function(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  const sec = document.getElementById(id);
+  if (!sec) return;
+  sec.classList.add('active');
+  window.scrollTo(0, 0);
 
-    initViewer();
+  // si abrimos 3D, inicializamos viewer (con pequeño delay para que el contenedor sea visible)
+  if (id === '3d') {
+    setTimeout(() => {
+      initViewer();
+      onWindowResize();
+    }, 80);
+  }
+};
+
+// inicial: si el usuario llega directo a la tab 3d
+if (document.getElementById('3d').classList.contains('active')) {
+  setTimeout(()=> initViewer(), 80);
+}
 </script>
-
-</body>
-</html>
