@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+borraste el resto de las secciones de mi pagina con el ultimo codigo q enviaste,quiero q trabajes con el q te mando a continuacion :    <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
@@ -224,165 +224,192 @@
 
  <!-- THREE JS / VIEWER -->
 <script type="module">
-import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js";
-import { OrbitControls } from "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js";
-import { GLTFLoader } from "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/loaders/GLTFLoader.js";
-import { DRACOLoader } from "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/loaders/DRACOLoader.js";
+import * as THREE from 'https://esm.run/three';
+import { OrbitControls } from 'https://esm.run/three/examples/jsm/controls/OrbitControls';
+import { GLTFLoader } from 'https://esm.run/three/examples/jsm/loaders/GLTFLoader';
+import { DRACOLoader } from 'https://esm.run/three/examples/jsm/loaders/DRACOLoader';
 
-const container = document.getElementById("viewer3d");
-
+// referencias DOM
+const container = document.getElementById('viewer3d');
 let scene, camera, renderer, controls;
 let gltfLoader, dracoLoader;
-let currentModel = null;
 let viewerInitialized = false;
+let currentModel = null;
 
-// -------- dispose ----------
+// --- utilities ---
+function showConsoleError(msg, err) {
+  console.error(msg, err || '');
+  // opcional: mostrar UI si querés
+}
+
+// dispose helper
 function disposeObject(obj) {
   if (!obj) return;
-
   obj.traverse((child) => {
     if (child.isMesh) {
       if (child.geometry) child.geometry.dispose();
       if (child.material) {
-        if (Array.isArray(child.material)) {
-          child.material.forEach((mat) => {
-            if (mat.map) mat.map.dispose();
-            mat.dispose();
+        const mat = child.material;
+        if (Array.isArray(mat)) {
+          mat.forEach(m => {
+            if (m.map) m.map.dispose();
+            m.dispose();
           });
         } else {
-          if (child.material.map) child.material.map.dispose();
-          child.material.dispose();
+          if (mat.map) mat.map.dispose();
+          mat.dispose();
         }
       }
     }
   });
 }
 
-// -------- init viewer ----------
+// --- inicializar viewer (solo una vez) ---
 function initViewer() {
+  // si ya inicializado, solo ajustar tamaño
   if (viewerInitialized) {
-    onResize();
+    onWindowResize();
     return;
   }
 
+  // crear escena/camara/renderer
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0x000000);
 
-  const w = Math.max(300, container.clientWidth);
-  const h = Math.max(250, window.innerHeight * 0.55);
+  // medidas seguras si el contenedor está oculto momentáneamente
+  const w = Math.max(320, container.clientWidth || window.innerWidth);
+  const h = Math.max(240, Math.round(window.innerHeight * 0.6));
 
-  camera = new THREE.PerspectiveCamera(50, w / h, 0.1, 2000);
-  camera.position.set(2.5, 2, 3);
+  camera = new THREE.PerspectiveCamera(50, w / h, 0.05, 2000);
+  camera.position.set(0, 1.5, 3);
 
   renderer = new THREE.WebGLRenderer({ antialias: true });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.setSize(w, h);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer.setSize(w, h, false);
   renderer.outputEncoding = THREE.sRGBEncoding;
 
-  container.innerHTML = "";
+  // limpiar e insertar canvas
+  container.innerHTML = '';
   container.appendChild(renderer.domElement);
 
+  // controles
   controls = new OrbitControls(camera, renderer.domElement);
-  controls.enableDamping = true;
+  controls.target.set(0, 0.7, 0);
+  controls.update();
 
-  const hemi = new THREE.HemisphereLight(0xffffff, 0x222222, 1.1);
+  // luces basicas
+  const hemi = new THREE.HemisphereLight(0xffffff, 0x444444, 1.0);
   scene.add(hemi);
-
-  const dir = new THREE.DirectionalLight(0xffffff, 1.2);
+  const dir = new THREE.DirectionalLight(0xffffff, 0.9);
   dir.position.set(5, 10, 7);
   scene.add(dir);
 
+  // DRACO + GLTF loader (IMPORTANTE para modelos draco-compressed)
   dracoLoader = new DRACOLoader();
-  dracoLoader.setDecoderPath("https://www.gstatic.com/draco/v1/decoders/");
+  // usar decoders públicos (Google). Si querés, podés subir los decoders a tu repo y apuntar ahí.
+  dracoLoader.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/');
 
   gltfLoader = new GLTFLoader();
   gltfLoader.setDRACOLoader(dracoLoader);
 
-  window.addEventListener("resize", onResize);
+  // listeners
+  window.addEventListener('resize', onWindowResize);
 
   viewerInitialized = true;
   animate();
 }
 
-// -------- load model ----------
-window.loadModel = function (path) {
+// --- resize ---
+function onWindowResize() {
+  if (!renderer || !camera) return;
+  const w = Math.max(320, container.clientWidth || window.innerWidth);
+  const h = Math.max(240, Math.round(window.innerHeight * 0.6));
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  renderer.setSize(w, h, false);
+}
+
+// --- loop ---
+function animate() {
+  requestAnimationFrame(animate);
+  if (renderer && scene && camera) renderer.render(scene, camera);
+}
+
+// --- cargar modelo ---
+window.loadModel = function(path) {
   if (!viewerInitialized) initViewer();
 
+  // limpiar modelo anterior
   if (currentModel) {
     scene.remove(currentModel);
     disposeObject(currentModel);
     currentModel = null;
   }
 
-  console.log("Cargando modelo:", path);
+  // Indicador simple en consola
+  console.log('Cargando GLB:', path);
 
   gltfLoader.load(
     path,
     (gltf) => {
       currentModel = gltf.scene;
-
+      // normalizar escala y centro
       const box = new THREE.Box3().setFromObject(currentModel);
       const size = box.getSize(new THREE.Vector3());
       const maxDim = Math.max(size.x, size.y, size.z);
-      const scale = 1.6 / maxDim;
-
+      const scale = maxDim > 0 ? (1.6 / maxDim) : 1;
       currentModel.scale.setScalar(scale);
 
+      // recenter
       box.setFromObject(currentModel);
       const center = box.getCenter(new THREE.Vector3());
       currentModel.position.sub(center);
 
       scene.add(currentModel);
 
-      camera.position.set(2.2, 1.8, 2.2);
-      controls.target.set(0, 0.5, 0);
+      // ajustar cámara para encuadrar
+      const dist = Math.max(1.2, 2.0 / scale);
+      camera.position.set(dist, dist, dist);
+      controls.target.set(0, 0, 0);
       controls.update();
 
-      console.log("Modelo cargado correctamente.");
+      console.log('Modelo cargado OK');
     },
-    (xhr) => {},
+    (xhr) => {
+      // progreso (opcional)
+      if (xhr.total) {
+        const pct = Math.round((xhr.loaded / xhr.total) * 100);
+        // console.log(`Progreso: ${pct}%`);
+      }
+    },
     (err) => {
-      console.error("Error cargando modelo:", err);
-      alert("Error al cargar el modelo. Revisa la consola.");
+      showConsoleError('Error cargando GLB', err);
+      alert('Error cargando modelo (mira la consola). Puede estar corrupto o la ruta ser incorrecta.');
     }
   );
 };
 
-// -------- resize ----------
-function onResize() {
-  if (!renderer || !camera) return;
-
-  const w = Math.max(300, container.clientWidth);
-  const h = Math.max(250, window.innerHeight * 0.55);
-
-  renderer.setSize(w, h);
-  camera.aspect = w / h;
-  camera.updateProjectionMatrix();
-}
-
-// -------- loop ----------
-function animate() {
-  requestAnimationFrame(animate);
-  if (controls) controls.update();
-  if (renderer && scene && camera) renderer.render(scene, camera);
-}
-
-// -------- tabs ----------
-window.showSection = function (id) {
-  document.querySelectorAll(".section").forEach((s) => s.classList.remove("active"));
+// --- navegación de pestañas ---
+window.showSection = function(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
   const sec = document.getElementById(id);
   if (!sec) return;
-  sec.classList.add("active");
-
+  sec.classList.add('active');
   window.scrollTo(0, 0);
 
-  if (id === "3d") {
+  // si abrimos 3D, inicializamos viewer (con pequeño delay para que el contenedor sea visible)
+  if (id === '3d') {
     setTimeout(() => {
       initViewer();
-      onResize();
-    }, 100);
+      onWindowResize();
+    }, 80);
   }
 };
+
+// inicial: si el usuario llega directo a la tab 3d
+if (document.getElementById('3d').classList.contains('active')) {
+  setTimeout(()=> initViewer(), 80);
+}
 </script>
 
 
