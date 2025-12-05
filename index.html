@@ -463,6 +463,10 @@ window.prevSlide = ()=>{
 };
 
 window.addEventListener("resize", updateCarousel);
+/* --- CAMBIAR IMAGEN PRINCIPAL EN 2D --- */
+window.setMainImage = (path)=>{
+  document.getElementById("mainImage").src = path;
+};
 
 </script>
 
