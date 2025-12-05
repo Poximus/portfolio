@@ -224,66 +224,73 @@
 
  <!-- THREE JS / VIEWER -->
 <script type="module">
-    import * as THREE from 'https://esm.run/three';
-    import { OrbitControls } from 'https://esm.run/three/examples/jsm/controls/OrbitControls';
-    import { GLTFLoader } from 'https://esm.run/three/examples/jsm/loaders/GLTFLoader';
+import * as THREE from 'https://esm.run/three';
+import { OrbitControls } from 'https://esm.run/three/examples/jsm/controls/OrbitControls';
+import { GLTFLoader } from 'https://esm.run/three/examples/jsm/loaders/GLTFLoader';
 
-    const container = document.getElementById('viewerContainer');
+let scene, camera, renderer, controls;
+let container = document.getElementById('viewer3d');
 
-    let scene, camera, renderer, controls;
+function initViewer() {
+    container.innerHTML = ""; // limpiar
 
-    // Init viewer
-    function initViewer() {
-        scene = new THREE.Scene();
-        scene.background = new THREE.Color(0x000000);
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x000000);
 
-        camera = new THREE.PerspectiveCamera(60, container.clientWidth / container.clientHeight, 0.1, 100);
-        camera.position.set(0, 1, 3);
+    camera = new THREE.PerspectiveCamera(
+        60,
+        container.clientWidth / container.clientHeight,
+        0.1,
+        100
+    );
+    camera.position.set(0, 1, 3);
 
-        renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(container.clientWidth, container.clientHeight);
-        container.innerHTML = ""; // clear
-        container.appendChild(renderer.domElement);
+    renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    container.appendChild(renderer.domElement);
 
-        controls = new OrbitControls(camera, renderer.domElement);
+    controls = new OrbitControls(camera, renderer.domElement);
 
-        // Lights
-        const light = new THREE.HemisphereLight(0xffffff, 0x444444, 2);
-        scene.add(light);
+    const light = new THREE.HemisphereLight(0xffffff, 0x444444, 2);
+    scene.add(light);
 
-        animate();
+    animate();
+}
+
+function animate() {
+    requestAnimationFrame(animate);
+    renderer.render(scene, camera);
+}
+
+const loader = new GLTFLoader();
+
+window.loadModel = function(path) {
+    loader.load(path, (gltf) => {
+        // borrar modelo anterior
+        while (scene.children.length > 1) {
+            scene.remove(scene.children[1]);
+        }
+
+        const model = gltf.scene;
+        model.position.set(0, 0, 0);
+        scene.add(model);
+    });
+};
+
+// NAV handling
+window.showSection = function(id) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0, 0);
+
+    if (id === "3d") {
+        setTimeout(() => {
+            initViewer(); // reiniciar viewer solo cuando se entra a 3D
+        }, 100);
     }
-
-    function animate() {
-        requestAnimationFrame(animate);
-        renderer.render(scene, camera);
-    }
-
-    initViewer();
-
-    const loader = new GLTFLoader();
-
-    window.loadModel = function(path) {
-        loader.load(path, (gltf) => {
-            // Clear previous model
-            while (scene.children.length > 1) {
-                scene.remove(scene.children[1]);
-            }
-
-            const model = gltf.scene;
-            model.scale.set(1,1,1);
-            model.position.set(0,0,0);
-            scene.add(model);
-        });
-    };
-
-    // NAV
-    window.showSection = function(id) {
-        document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        window.scrollTo(0,0);
-    }
+};
 </script>
+
 
 </body>
 </html>
