@@ -534,55 +534,139 @@ videoPlayer.src = animFiles[0];
 
 // ---------- THREE JS 3D VIEWER -----------
 
-let scene, camera, renderer, loader, mixer;
-let clock = new THREE.Clock();
-
-initViewer();
-loadModel("modelo1.glb");
-
-function initViewer(){
-  const cont = document.getElementById("modelViewer");
-
-  scene = new THREE.Scene();
-  camera = new THREE.PerspectiveCamera(60, cont.clientWidth/cont.clientHeight, 0.1, 100);
-  camera.position.set(2,1,3);
-
-  renderer = new THREE.WebGLRenderer({antialias:true});
-  renderer.setSize(cont.clientWidth, cont.clientHeight);
-  cont.appendChild(renderer.domElement);
-
-  const light = new THREE.DirectionalLight(0xffffff, 1);
-  light.position.set(3,3,3);
-  scene.add(light);
-  scene.add(new THREE.AmbientLight(0xffffff, 0.4));
-
-  loader = new THREE.GLTFLoader();
-
-  function animate(){
-    requestAnimationFrame(animate);
-    let delta = clock.getDelta();
-    if (mixer) mixer.update(delta);
-    renderer.render(scene, camera);
-  }
-  animate();
-}
-
-function loadModel(file){
-  if(!loader) return;
-  loader.load("assets/models/"+file, glb=>{
-    while(scene.children.length > 2) scene.remove(scene.children[2]);
-    let model = glb.scene;
-    scene.add(model);
-    mixer = glb.animations.length ? new THREE.AnimationMixer(model) : null;
-    if(mixer) mixer.clipAction(glb.animations[0]).play();
-  });
-}
 
 </script>
 
 <!-- LIBS THREE -->
 <script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
 <script src="https://unpkg.com/three@0.160.0/examples/js/loaders/GLTFLoader.js"></script>
+<script src="https://unpkg.com/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+/* ================================
+      VISOR 3D PROFESIONAL
+================================ */
+
+let scene, camera, renderer, loader, mixer, controls;
+const clock = new THREE.Clock();
+let currentModel = null;
+
+function initViewer() {
+
+  const container = document.getElementById("modelViewer");
+
+  // ------ ESCENA ------
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x000000);
+
+  // ------ CÁMARA ------
+  camera = new THREE.PerspectiveCamera(
+    60,
+    container.clientWidth / container.clientHeight,
+    0.1,
+    100
+  );
+  camera.position.set(2, 1.5, 3);
+
+  // ------ RENDERER ------
+  renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setSize(container.clientWidth, container.clientHeight);
+  renderer.setPixelRatio(window.devicePixelRatio);
+  container.appendChild(renderer.domElement);
+
+  // ------ CONTROLES ------
+  controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.05;
+
+  // ------ ILUMINACIÓN ------
+  const hemi = new THREE.HemisphereLight(0xffffff, 0x222222, 1);
+  scene.add(hemi);
+
+  const dir = new THREE.DirectionalLight(0xffffff, 1.2);
+  dir.position.set(5, 5, 5);
+  scene.add(dir);
+
+  // ------ LOADER ------
+  loader = new THREE.GLTFLoader();
+
+  // ------ RESPONSIVE ------
+  window.addEventListener("resize", () => resizeViewer(container));
+
+  animate();
+}
+
+function resizeViewer(container) {
+  const w = container.clientWidth;
+  const h = container.clientHeight;
+
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  renderer.setSize(w, h);
+}
+
+function animate() {
+  requestAnimationFrame(animate);
+
+  const delta = clock.getDelta();
+  if (mixer) mixer.update(delta);
+
+  controls.update();
+  renderer.render(scene, camera);
+}
+
+/* ---------------------------
+        CARGA DE MODELO
+---------------------------- */
+
+function loadModel(filename) {
+
+  const path = "assets/models/" + filename;
+
+  // limpiar modelo anterior
+  if (currentModel) {
+    scene.remove(currentModel);
+    currentModel.traverse(obj => {
+      if (obj.geometry) obj.geometry.dispose();
+      if (obj.material) {
+        if (Array.isArray(obj.material)) {
+          obj.material.forEach(m => m.dispose());
+        } else {
+          obj.material.dispose();
+        }
+      }
+    });
+    currentModel = null;
+  }
+
+  loader.load(
+    path,
+    gltf => {
+      currentModel = gltf.scene;
+      scene.add(currentModel);
+
+      // Animación (si tiene)
+      mixer = gltf.animations.length
+        ? new THREE.AnimationMixer(currentModel)
+        : null;
+
+      if (mixer)
+        mixer.clipAction(gltf.animations[0]).play();
+
+      console.log("Modelo cargado:", filename);
+    },
+    xhr => {
+      console.log("Cargando: " + (xhr.loaded / xhr.total) * 100 + "%");
+    },
+    error => {
+      console.error("Error al cargar modelo:", error);
+    }
+  );
+}
+
+/* ----------- INICIO ----------- */
+initViewer();
+loadModel("compressed_Bull_Char_blended.glb");
+</script>
 
 </body>
 </html>
