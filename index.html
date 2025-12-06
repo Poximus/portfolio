@@ -139,6 +139,39 @@
   padding: 10px;
   object-fit: contain;
 }
+/* Bloque de software */
+.software-container {
+    margin-top: 60px;
+    padding: 30px;
+    background: #111;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.software-container h3 {
+    margin-bottom: 20px;
+    font-size: 1.8rem;
+    color: #fff;
+}
+
+.software-logos {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 25px;
+}
+
+.software-logos img {
+    width: 80px;
+    height: auto;
+    opacity: 0.9;
+    transition: 0.3s ease;
+}
+
+.software-logos img:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
 
 
   /* ------------ 2D SECTION -------------- */
@@ -289,6 +322,18 @@
         <img src="assets/home/logo5.png">
       </div>
     </div>
+<div class="software-container">
+    <h3>Software que utilizo</h3>
+
+    <div class="software-logos">
+        <img src="ruta/logo_blender.png" alt="Blender">
+        <img src="ruta/logo_substance.png" alt="Substance Painter">
+        <img src="ruta/logo_unity.png" alt="Unity">
+        <img src="ruta/logo_maya.png" alt="Maya">
+        <img src="ruta/logo_photoshop.png" alt="Photoshop">
+        <!-- Agrega los que quieras -->
+    </div>
+</div>
 
   </div>
 </section>
