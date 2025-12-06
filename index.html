@@ -139,14 +139,14 @@
   padding: 10px;
   object-fit: contain;
 }
-/* Bloque de software */
-/* FOOTER de software */
-.software-footer {
+/* Sección de software (solo en Home) */
+.software-strip {
     width: 100%;
-    padding: 40px 20px;
-    background: #0c0c0c;
-    border-top: 2px solid #1f1f1f;
-    margin-top: 80px;
+    background: #111;
+    padding: 40px 30px;
+    margin-top: 40px;
+    border-radius: 10px;
+    border: 1px solid #222;
 
     display: flex;
     flex-direction: column;
@@ -154,33 +154,33 @@
     text-align: center;
 }
 
-.software-footer h3 {
-    font-size: 1.8rem;
+.software-strip h3 {
     color: #fff;
+    font-size: 1.7rem;
     margin-bottom: 25px;
     text-transform: uppercase;
     letter-spacing: 2px;
 }
 
-.software-logos {
+.software-icons {
     display: flex;
-    justify-content: center;
-    align-items: center;
     flex-wrap: wrap;
-    gap: 30px;
-    max-width: 1200px;
+    gap: 25px;
+    justify-content: center;
+    max-width: 1000px;
 }
 
-.software-logos img {
-    width: 70px;
-    opacity: 0.8;
+.software-icons img {
+    width: 65px;
+    opacity: 0.85;
     transition: 0.3s ease;
 }
 
-.software-logos img:hover {
+.software-icons img:hover {
     opacity: 1;
     transform: scale(1.1);
 }
+
 
 
   /* ------------ 2D SECTION -------------- */
@@ -331,18 +331,21 @@
         <img src="assets/home/logo5.png">
       </div>
     </div>
-<footer class="software-footer">
+<div class="software-strip">
     <h3>Software que utilizo</h3>
 
-    <div class="software-logos">
-        <img src="ruta/logo_blender.png" alt="Blender">
-        <img src="ruta/logo_substance.png" alt="Substance Painter">
-        <img src="ruta/logo_unity.png" alt="Unity">
-        <img src="ruta/logo_maya.png" alt="Maya">
-        <img src="ruta/logo_photoshop.png" alt="Photoshop">
-        <!-- agrega más logos -->
+    <div class="software-icons">
+        <img src="ruta/blender.png" alt="Blender">
+        <img src="ruta/substance.png" alt="Substance Painter">
+        <img src="ruta/unity.png" alt="Unity">
+        <img src="ruta/maya.png" alt="Maya">
+        <img src="ruta/photoshop.png" alt="Photoshop">
+        <img src="ruta/zbrush.png" alt="ZBrush">
+        <img src="ruta/houdini.png" alt="Houdini">
+        <!-- agrega más según necesites -->
     </div>
-</footer>
+</div>
+
 
 
   </div>
