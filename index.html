@@ -543,18 +543,11 @@ videoPlayer.src = animFiles[0];
 // ---------- THREE JS 3D VIEWER -----------
 
 
-</script>
+
 
 <!-- LIBS THREE -->
-<script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
-<script src="https://unpkg.com/three@0.160.0/examples/js/loaders/GLTFLoader.js"></script>
-<script src="https://unpkg.com/three@0.160.0/examples/js/controls/OrbitControls.js"></script>
-<script>
-/* ================================
-      VISOR 3D PROFESIONAL
-================================ */
 
-<!-- THREE JS -->
+
 <script type="module">
 import * as THREE from "https://esm.run/three";
 import { OrbitControls } from "https://esm.run/three/examples/jsm/controls/OrbitControls";
@@ -567,11 +560,7 @@ let gltfLoader, dracoLoader;
 let currentModel = null;
 let mixer = null;
 let clock = new THREE.Clock();
-
-// luces
 let hemi, dir;
-
-// HDRI
 let envMap = null;
 
 const container = document.getElementById("viewer3d");
@@ -592,7 +581,6 @@ function initViewer() {
 
   controls = new OrbitControls(camera, renderer.domElement);
 
-  // --- HDRI ---
   new RGBELoader()
     .setPath("assets/hdri/")
     .load("studio_small_08_1k.hdr", (hdr)=>{
@@ -601,13 +589,11 @@ function initViewer() {
       scene.environment = envMap;
     });
 
-  // luces por defecto
   hemi = new THREE.HemisphereLight(0xffffff, 0x444444, 1);
   dir = new THREE.DirectionalLight(0xffffff, 1);
   dir.position.set(5,10,7);
   scene.add(hemi, dir);
 
-  // loaders
   dracoLoader = new DRACOLoader().setDecoderPath("https://www.gstatic.com/draco/v1/decoders/");
   gltfLoader = new GLTFLoader();
   gltfLoader.setDRACOLoader(dracoLoader);
@@ -620,7 +606,6 @@ function animate() {
   let delta = clock.getDelta();
   if (mixer) mixer.update(delta);
   renderer.render(scene, camera);
-  
 }
 
 window.loadModel = (path)=>{
@@ -633,19 +618,17 @@ window.loadModel = (path)=>{
   }
 
   gltfLoader.load(path, (gltf)=>{
-
     spinner.style.display = "none";
     currentModel = gltf.scene;
 
-    // Animaciones →
-    mixer = gltf.animations.length > 0 ? new THREE.AnimationMixer(gltf.scene) : null;
+    mixer = gltf.animations.length ? new THREE.AnimationMixer(gltf.scene) : null;
     if (mixer) mixer.clipAction(gltf.animations[0]).play();
 
-    // Normalizar escala
     const box = new THREE.Box3().setFromObject(currentModel);
     const size = box.getSize(new THREE.Vector3());
     const scale = 1.6 / Math.max(size.x, size.y, size.z);
     currentModel.scale.setScalar(scale);
+
     box.setFromObject(currentModel);
     const center = box.getCenter(new THREE.Vector3());
     currentModel.position.sub(center);
@@ -654,51 +637,20 @@ window.loadModel = (path)=>{
   });
 };
 
-window.setLightMode = (mode)=>{
-  switch(mode){
-    case "studio":
-      hemi.intensity = 1;
-      hemi.color.set(0xffffff);
-      dir.intensity = 1;
-      dir.color.set(0xffffff);
-      break;
-
-    case "warm":
-      hemi.color.set(0xffbb66);
-      dir.color.set(0xffaa55);
-      break;
-
-    case "cool":
-      hemi.color.set(0x99bbff);
-      dir.color.set(0x88aaff);
-      break;
-  }
-};
+let firstModelLoaded = false;
 
 window.showSection = (id)=>{
   document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));
   document.getElementById(id).classList.add("active");
-  window.scrollTo(0,0);
-  if (id === "3d") setTimeout(()=>initViewer(), 100);
-};
-  // Cargar automáticamente el primer modelo al entrar en la sección 3D por primera vez
-let firstModelLoaded = false;
-
-const originalShowSection = window.showSection;
-window.showSection = (id) => {
-  originalShowSection(id);
 
   if (id === "3d" && !firstModelLoaded) {
     firstModelLoaded = true;
-
-    // Iniciar visor si aún no se creó
     initViewer();
-
-    // Cargar el primer modelo
     loadModel("assets/models/compressed_Bull_Char_blended.glb");
   }
 };
 </script>
+
 
 </body>
 </html>
