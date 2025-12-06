@@ -140,31 +140,40 @@
   object-fit: contain;
 }
 /* Bloque de software */
-.software-container {
-    margin-top: 60px;
-    padding: 30px;
-    background: #111;
-    border-radius: 10px;
+/* FOOTER de software */
+.software-footer {
+    width: 100%;
+    padding: 40px 20px;
+    background: #0c0c0c;
+    border-top: 2px solid #1f1f1f;
+    margin-top: 80px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
 }
 
-.software-container h3 {
-    margin-bottom: 20px;
+.software-footer h3 {
     font-size: 1.8rem;
     color: #fff;
+    margin-bottom: 25px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
 }
 
 .software-logos {
     display: flex;
     justify-content: center;
+    align-items: center;
     flex-wrap: wrap;
-    gap: 25px;
+    gap: 30px;
+    max-width: 1200px;
 }
 
 .software-logos img {
-    width: 80px;
-    height: auto;
-    opacity: 0.9;
+    width: 70px;
+    opacity: 0.8;
     transition: 0.3s ease;
 }
 
@@ -322,7 +331,7 @@
         <img src="assets/home/logo5.png">
       </div>
     </div>
-<div class="software-container">
+<footer class="software-footer">
     <h3>Software que utilizo</h3>
 
     <div class="software-logos">
@@ -331,9 +340,10 @@
         <img src="ruta/logo_unity.png" alt="Unity">
         <img src="ruta/logo_maya.png" alt="Maya">
         <img src="ruta/logo_photoshop.png" alt="Photoshop">
-        <!-- Agrega los que quieras -->
+        <!-- agrega más logos -->
     </div>
-</div>
+</footer>
+
 
   </div>
 </section>
