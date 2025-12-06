@@ -127,9 +127,13 @@
 }
 
 .logos-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); /* dos columnas de logos */
-  gap: 15px;
+    display: grid;
+    justify-items: center;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+    align-content: space-around;
+    justify-content: space-evenly;
+    align-items: stretch;
 }
 
 .logos-grid img {
