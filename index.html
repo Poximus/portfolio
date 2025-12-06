@@ -1,707 +1,440 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Max Ariani - Portfolio</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio Max</title>
+<style>
+  body {
+    margin: 0;
+    background:#111;
+    color:#eee;
+    font-family: Arial, sans-serif;
+    overflow-x:hidden;
+  }
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  header {
+    position: sticky;
+    top: 0;
+    background:#000;
+    padding: 15px 20px;
+    z-index:1000;
+    display:flex;
+    gap:20px;
+    border-bottom:1px solid #333;
+  }
+  header a {
+    color:#aaa;
+    text-decoration:none;
+    font-size:18px;
+    transition:.2s;
+  }
+  header a.active {
+    color:#4cc2ff;
+  }
+  header a:hover {
+    color:#fff;
+  }
 
-  <style>
-    /* ---------- BASE - Minimal premium ---------- */
-    :root{
-      --bg:#0b0b0b;
-      --muted:#9aa0a6;
-      --accent:#00e6c6;
-      --panel:#0f0f10;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family: Inter, Arial, Helvetica, sans-serif;
-      background:var(--bg);
-      color:#fff;
-      -webkit-font-smoothing:antialiased;
-    }
+  section {
+    display:none;
+    padding:40px;
+  }
+  section.active {
+    display:block;
+  }
 
-    nav{
-      position:sticky; top:0; z-index:1200;
-      background: #050505; border-bottom:1px solid #151515;
-      display:flex; justify-content:center; gap:28px; padding:18px 10px;
-    }
-    nav a{ color:#ddd; text-decoration:none; font-weight:600; cursor:pointer; }
-    nav a:hover{ color:var(--accent); }
+  footer {
+    position:sticky;
+    bottom:0;
+    background:#000;
+    padding:15px;
+    text-align:center;
+    border-top:1px solid #333;
+  }
 
-    /* ---------- LAYOUT (desktop) ---------- */
-    .container{
-      display:grid;
-      grid-template-columns: 260px 1fr;
-      gap:28px;
-      max-width:1400px;
-      margin:28px auto;
-      padding:0 24px 120px;
-    }
+  /* ------------ HOME -------------- */
 
-    /* left column thumbnails (scroll vertical) */
-    .left-col{
-      height:calc(100vh - 120px);
-      overflow-y:auto;
-      padding:12px;
-      border-radius:10px;
-      background:linear-gradient(180deg,#070707, #0f0f10);
-      border:1px solid #161616;
-    }
-    .section-title{
-      font-size:14px; color:var(--muted); margin:8px 6px 12px; text-transform:uppercase; letter-spacing:1px;
-    }
-    .thumb-item{
-      display:flex; gap:10px; align-items:center; padding:8px; margin-bottom:10px;
-      border-radius:8px; cursor:pointer; transition:0.14s;
-      border:1px solid transparent;
-    }
-    .thumb-item:hover{ transform:translateX(6px); border-color:#1d1d1d; background:#0b0b0b; }
-    .thumb-item.active{ border-color:var(--accent); box-shadow:0 8px 30px rgba(0,230,198,0.06); }
-    .thumb-item img{ width:64px; height:48px; object-fit:cover; border-radius:6px; }
+  #home .cover {
+    width:100%;
+    height:300px;
+    background:url("assets/home/cover.jpg") center/cover no-repeat;
+    border-radius:8px;
+    margin-bottom:40px;
+  }
 
-    .thumb-item .meta{ display:flex; flex-direction:column; gap:4px; }
-    .thumb-item .meta .title{ font-size:13px; color:#eee; }
-    .thumb-item .meta .sub{ font-size:12px; color:var(--muted); }
+  #home .profile-box {
+    display:flex;
+    gap:40px;
+    align-items:center;
+  }
 
-    /* right main area */
-    .main{
-      min-height:70vh;
-      display:flex; flex-direction:column; gap:12px;
-    }
+  #home .profile-box img {
+    width:200px;
+    height:200px;
+    border-radius:10px;
+    object-fit:cover;
+    border:3px solid #4cc2ff;
+  }
 
-    /* mini-thumbs row above viewer */
-    .mini-row{
-      display:flex; gap:8px; align-items:center; padding:6px 8px;
-      overflow-x:auto; scrollbar-width:none;
-    }
-    .mini-row::-webkit-scrollbar{ display:none; }
-    .mini-thumb{ width:86px; height:56px; object-fit:cover; border-radius:6px; cursor:pointer; border:2px solid transparent; }
-    .mini-thumb.active{ border-color:var(--accent); transform:translateY(-3px); }
+  #home .bio {
+    max-width:600px;
+    font-size:18px;
+    line-height:1.6;
+  }
 
-    /* viewer box */
-    .viewer-wrap{
-      position:relative;
-      border-radius:12px;
-      background:#000;
-      border:1px solid #1b1b1b;
-      flex:1 1 auto;
-      display:flex; align-items:center; justify-content:center;
-      overflow:hidden;
-    }
+  /* ------------ 2D SECTION -------------- */
 
-    /* viewer controls (arrows) */
-    .arrow{
-      position:absolute; top:50%; transform:translateY(-50%);
-      width:52px; height:52px; border-radius:50%;
-      background:rgba(0,0,0,0.45); color:#fff; display:flex; align-items:center; justify-content:center;
-      cursor:pointer; z-index:60; border:1px solid rgba(255,255,255,0.03);
-    }
-    .arrow:hover{ background:var(--accent); color:#000; }
-    .arrow.left{ left:12px; }
-    .arrow.right{ right:12px; }
+  .two-column {
+    display:flex;
+    gap:30px;
+  }
 
-    /* spinner center */
-    .spinner{
-      position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
-      width:56px; height:56px; border-radius:50%; border:6px solid #222; border-top-color:var(--accent);
-      animation:spin 0.9s linear infinite; display:none; z-index:80;
-    }
-    @keyframes spin{ to{ transform:translate(-50%,-50%) rotate(360deg); } }
+  .thumbs {
+    width:160px;
+    height:70vh;
+    overflow-y:auto;
+    border-right:1px solid #333;
+    padding-right:10px;
+  }
 
-    /* image viewer */
-    .img-view{ width:100%; height:100%; display:flex; align-items:center; justify-content:center; }
-    .img-view img{ max-width:100%; max-height:100%; object-fit:contain; border-radius:6px; }
+  .thumbs img {
+    width:100%;
+    margin-bottom:10px;
+    opacity:0.7;
+    cursor:pointer;
+    border-radius:6px;
+    transition:.2s;
+  }
+  .thumbs img:hover,
+  .thumbs img.active {
+    opacity:1;
+    transform:scale(1.02);
+  }
 
-    /* video */
-    video.viewer-video{ width:100%; height:100%; object-fit:contain; background:#000; }
+  .viewer {
+    flex:1;
+  }
 
-    /* 3D canvas */
-    #viewer3d{ width:100%; height:100%; }
+  .viewer img {
+    width:100%;
+    border-radius:8px;
+  }
 
-    /* description area */
-    .desc{
-      padding:14px; background:linear-gradient(180deg,#070707,#0b0b0b); border-radius:10px; border:1px solid #141414;
-      color:var(--muted);
-    }
-    .desc h3{ margin:0 0 6px; color:#fff; }
-    .desc p{ margin:0; line-height:1.45; }
+  .viewer .desc {
+    margin-top:20px;
+    font-size:16px;
+    color:#ccc;
+  }
 
-    /* footer */
-    footer{ position:fixed; bottom:0; left:0; right:0; background:#050505; border-top:1px solid #151515; padding:12px; text-align:center; z-index:1200; }
-    .social-icons{ display:flex; gap:12px; justify-content:center; align-items:center; color:var(--muted); }
+  /* --- Carrusel del viewer --- */
+  .top-thumbs {
+    display:flex;
+    gap:10px;
+    margin-bottom:20px;
+  }
+  .top-thumbs img {
+    width:90px;
+    height:70px;
+    object-fit:cover;
+    opacity:0.6;
+    border-radius:6px;
+    cursor:pointer;
+    transition:.2s;
+  }
+  .top-thumbs img.active {
+    opacity:1;
+    border:2px solid #4cc2ff;
+  }
 
-    /* small helpers */
-    .hidden{ display:none !important; }
-    .muted{ color:var(--muted); font-size:13px; }
-    .project-label { font-weight:700; letter-spacing:0.6px; }
+  .viewer-controls {
+    display:flex;
+    justify-content:space-between;
+    margin:10px 0;
+  }
 
-    /* responsive desktop min */
-    @media (max-width:1100px){
-      .container{ grid-template-columns: 220px 1fr; padding:0 12px 120px;}
-    }
-  </style>
+  .viewer-controls button {
+    background:#222;
+    border:none;
+    color:#4cc2ff;
+    padding:10px 20px;
+    cursor:pointer;
+    font-size:16px;
+    border-radius:6px;
+  }
+
+  /* ------------- ANIMATION ---------------- */
+
+  #animation video {
+    width:100%;
+    border-radius:8px;
+  }
+
+  #animation .thumbs img {
+    height:100px;
+    object-fit:cover;
+  }
+
+  /* ----------- TECH ART ------------ */
+  .tech-grid {
+    display:grid;
+    grid-template-columns:repeat(3, 1fr);
+    gap:20px;
+  }
+  .tech-grid img {
+    width:100%;
+    border-radius:8px;
+  }
+
+</style>
 </head>
 <body>
 
-<nav>
-  <a onclick="openSection('home')">Home</a>
-  <a onclick="openSection('2d')">2D</a>
-  <a onclick="openSection('3d')">3D</a>
-  <a onclick="openSection('anim')">Animación</a>
-  <a onclick="openSection('tech')">Tech Art</a>
-</nav>
+<header>
+  <a href="#" data-target="home" class="active">Home</a>
+  <a href="#" data-target="2d">2D</a>
+  <a href="#" data-target="3d">3D</a>
+  <a href="#" data-target="animation">Animación</a>
+  <a href="#" data-target="tech">Technical Art</a>
+</header>
 
-<!-- MAIN LAYOUT -->
-<div class="container">
+<!-- ======================= HOME ========================= -->
 
-  <!-- LEFT COLUMN: THUMBNAILS (will be populated) -->
-  <aside class="left-col" id="leftCol">
-    <div class="section-title" id="leftSectionTitle">Section</div>
-    <div id="leftThumbs"></div>
-  </aside>
+<section id="home" class="active">
+  <div class="cover"></div>
 
-  <!-- MAIN: mini-thumbs, viewer, description -->
-  <main class="main">
+  <div class="profile-box">
+    <img src="assets/home/profile.jpg">
 
-    <!-- mini thumbnails -->
-    <div class="mini-row" id="miniRow"></div>
+    <div class="bio">
+      <h2>Max — Artista 2D/3D, Animador y Technical Artist</h2>
+      <p>
+        Soy un artista multidisciplinario especializado en modelado 3D, texturizado, animación,
+        dirección visual y técnicas creativas aplicadas a videojuegos.  
+        Disfruto combinar arte, tecnología y narrativa para crear experiencias inmersivas.
+        Este es un texto temporal — cuando quieras me envías el definitivo.
+      </p>
+    </div>
+  </div>
+</section>
 
-    <!-- viewer -->
-    <div class="viewer-wrap" id="viewerWrap">
-      <div class="arrow left" id="prevBtn" title="Anterior"><i class="fas fa-chevron-left"></i></div>
-      <div class="arrow right" id="nextBtn" title="Siguiente"><i class="fas fa-chevron-right"></i></div>
+<!-- ======================= 2D ========================= -->
 
-      <div class="spinner" id="spinner"></div>
+<section id="2d">
+  <h2>Portfolio 2D</h2>
 
-      <!-- IMAGE container -->
-      <div id="imageContainer" class="img-view hidden"><img id="mainImage" src=""></div>
+  <div class="two-column">
 
-      <!-- VIDEO container -->
-      <div id="videoContainer" class="hidden" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;">
-        <video id="mainVideo" class="viewer-video" controls></video>
+    <div class="thumbs" id="thumbs2d"></div>
+
+    <div class="viewer">
+      <div class="top-thumbs" id="top2d"></div>
+
+      <div class="viewer-controls">
+        <button onclick="prev2D()">◀</button>
+        <button onclick="next2D()">▶</button>
       </div>
 
-      <!-- 3D canvas -->
-      <div id="viewer3d" class="hidden" aria-label="3D viewer"></div>
-
-      <!-- TECH iframe / gif -->
-      <div id="techContainer" class="hidden" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;"></div>
-
+      <img id="viewer2d" src="">
+      <div class="desc" id="desc2d">Descripción del proyecto aquí…</div>
     </div>
 
-    <!-- Project description -->
-    <div class="desc" id="projectDesc">
-      <h3 id="projTitle">Título del proyecto</h3>
-      <p id="projDesc">Descripción técnica / artística del proyecto. Aquí irá la explicación del workflow, herramientas, y notas.</p>
-      <div style="margin-top:8px;" id="projMeta" class="muted"></div>
+  </div>
+</section>
+
+<!-- ======================= 3D ========================= -->
+
+<section id="3d">
+  <h2>Modelos 3D</h2>
+
+  <div class="two-column">
+    <div class="thumbs" id="thumbs3d">
+      <img src="assets/models/thumb1.jpg" onclick="loadModel('modelo1.glb')">
+      <img src="assets/models/thumb2.jpg" onclick="loadModel('modelo2.glb')">
+      <img src="assets/models/thumb3.jpg" onclick="loadModel('modelo3.glb')">
     </div>
 
-  </main>
-</div>
+    <div class="viewer">
+      <div id="modelViewer" style="width:100%; height:480px; background:#000;"></div>
+      <p class="desc">Visualizador 3D con orbit controls, animación, luces y auto-load del primer modelo.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= ANIMATION ========================= -->
+
+<section id="animation">
+  <h2>Animación</h2>
+
+  <div class="two-column">
+    <div class="thumbs" id="thumbsAnim"></div>
+
+    <div class="viewer">
+      <video id="videoPlayer" controls></video>
+      <div class="desc" id="descAnim">Descripción de la animación…</div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================= TECH ART ========================= -->
+
+<section id="tech">
+  <h2>Technical Art</h2>
+  <div class="tech-grid">
+    <img src="assets/tech/tech1.jpg">
+    <img src="assets/tech/tech2.jpg">
+    <img src="assets/tech/tech3.jpg">
+    <img src="assets/tech/tech4.jpg">
+    <img src="assets/tech/tech5.jpg">
+    <img src="assets/tech/tech6.jpg">
+  </div>
+</section>
 
 <footer>
-  <div class="project-label">© 2025 Max Ariani</div>
-  <div class="social-icons">
-    <a href="#" title="Instagram"><i class="fab fa-instagram"></i></a>
-    <a href="#" title="ArtStation"><i class="fab fa-artstation"></i></a>
-    <a href="#" title="Email"><i class="fas fa-envelope"></i></a>
-  </div>
+  <div style="color:#4cc2ff; margin-bottom:8px;">Contact</div>
+  <a>🔗 Instagram</a> —
+  <a>🔗 ArtStation</a> —
+  <a>🔗 LinkedIn</a>
 </footer>
 
-<!-- MODULE: three + loaders -->
-<script type="module">
-/* ---------------------------
-  IMPORTS
-----------------------------*/
-import * as THREE from 'https://esm.run/three';
-import { OrbitControls } from 'https://esm.run/three/examples/jsm/controls/OrbitControls';
-import { GLTFLoader } from 'https://esm.run/three/examples/jsm/loaders/GLTFLoader';
-import { DRACOLoader } from 'https://esm.run/three/examples/jsm/loaders/DRACOLoader';
-import { RGBELoader } from 'https://esm.run/three/examples/jsm/loaders/RGBELoader';
+<script>
+// ------------------ NAV -----------------------
 
-/* ---------------------------
-  GLOBAL STATE & DOM
-----------------------------*/
-const leftThumbsEl = document.getElementById('leftThumbs');
-const leftSectionTitle = document.getElementById('leftSectionTitle');
-const miniRow = document.getElementById('miniRow');
-const spinner = document.getElementById('spinner');
-const viewer3dEl = document.getElementById('viewer3d');
-const imageContainer = document.getElementById('imageContainer');
-const mainImage = document.getElementById('mainImage');
-const videoContainer = document.getElementById('videoContainer');
-const mainVideo = document.getElementById('mainVideo');
-const techContainer = document.getElementById('techContainer');
-const projTitle = document.getElementById('projTitle');
-const projDesc = document.getElementById('projDesc');
-const projMeta = document.getElementById('projMeta');
-const prevBtn = document.getElementById('prevBtn');
-const nextBtn = document.getElementById('nextBtn');
+const links = document.querySelectorAll("header a");
+const sections = document.querySelectorAll("section");
 
-let activeSection = 'home';      // home/2d/3d/anim/tech
-let activeIndex = 0;             // index inside current section
-let sectionsOrder = ['2d','3d','anim','tech'];
+links.forEach(link=>{
+  link.addEventListener("click", e=>{
+    e.preventDefault();
+    const target = link.dataset.target;
 
-let projects = {
-  '2d': [
-    { id:'2d-1', title:'Ilustración 1', thumb:'assets/2d/thumb1.jpg', type:'image', files:['assets/2d/img1.jpg'], desc:'Detalles del proceso 2D - Ilustración 1', meta:'Photoshop / 3000x2000' },
-    { id:'2d-2', title:'Ilustración 2', thumb:'assets/2d/thumb2.jpg', type:'image', files:['assets/2d/img2.jpg'], desc:'Detalles del proceso 2D - Ilustración 2', meta:'Photoshop / 2800x1600' },
-    { id:'2d-3', title:'Ilustración 3', thumb:'assets/2d/thumb3.jpg', type:'image', files:['assets/2d/img3.jpg'], desc:'Detalles del proceso 2D - Ilustración 3', meta:'Procreate / 2048x2048' },
-    { id:'2d-4', title:'Ilustración 4', thumb:'assets/2d/thumb4.jpg', type:'image', files:['assets/2d/img4.jpg'], desc:'Detalles del proceso 2D - Ilustración 4', meta:'Photoshop / 2500x1400' },
-    { id:'2d-5', title:'Ilustración 5', thumb:'assets/2d/thumb5.jpg', type:'image', files:['assets/2d/img5.jpg'], desc:'Detalles del proceso 2D - Ilustración 5', meta:'Clip Studio / 3000x2000' }
-  ],
+    sections.forEach(sec=>sec.classList.remove("active"));
+    links.forEach(l=>l.classList.remove("active"));
 
-  '3d': [
-    { id:'3d-1', title:'Bull Char', thumb:'assets/thumbnails/bull.jpg', type:'3d', files:['assets/models/modelo1.glb'], desc:'Modelo 3D – Bull Char. Pipeline: ZBrush -> Maya -> Substance', meta:'GLB Draco / 12k tris' },
-    { id:'3d-2', title:'Robot', thumb:'assets/thumbnails/model2.jpg', type:'3d', files:['assets/models/modelo2.glb'], desc:'Robot con rig y animaciones', meta:'GLB / anims' },
-    { id:'3d-3', title:'Auto', thumb:'assets/thumbnails/model3.jpg', type:'3d', files:['assets/models/modelo3.glb'], desc:'Car render - PBR materials', meta:'GLB / 8k tris' },
-    { id:'3d-4', title:'Weapon', thumb:'assets/thumbnails/model4.jpg', type:'3d', files:['assets/models/modelo4.glb'], desc:'Weapon prop - bake detail maps', meta:'GLB / AO baked' },
-    { id:'3d-5', title:'Character', thumb:'assets/thumbnails/model5.jpg', type:'3d', files:['assets/models/modelo5.glb'], desc:'Character finalizado con skin weights', meta:'GLB / rig' }
-  ],
-
-  'anim': [
-    { id:'a-1', title:'Shot 1', thumb:'assets/anim/thumb1.jpg', type:'video', files:['assets/anim/video1.mp4'], desc:'Shot de animación 1', meta:'1920x1080 / 30s' },
-    { id:'a-2', title:'Shot 2', thumb:'assets/anim/thumb2.jpg', type:'video', files:['assets/anim/video2.mp4'], desc:'Shot de animación 2', meta:'1920x1080 / 24s' },
-    { id:'a-3', title:'Shot 3', thumb:'assets/anim/thumb3.jpg', type:'video', files:['assets/anim/video3.mp4'], desc:'Shot de animación 3', meta:'1280x720 / 12s' },
-    { id:'a-4', title:'Shot 4', thumb:'assets/anim/thumb4.jpg', type:'video', files:['assets/anim/video4.mp4'], desc:'Shot de animación 4', meta:'1920x1080 / 15s' },
-    { id:'a-5', title:'Shot 5', thumb:'assets/anim/thumb5.jpg', type:'video', files:['assets/anim/video5.mp4'], desc:'Shot de animación 5', meta:'1920x1080 / 10s' }
-  ],
-
-  'tech': [
-    { id:'t-1', title:'VFX Loop', thumb:'assets/tech/thumb1.jpg', type:'gif', files:['assets/tech/vfx1.gif'], desc:'VFX particle loop - GPU particles', meta:'Unity VFX Graph' },
-    { id:'t-2', title:'Shader Demo', thumb:'assets/tech/thumb2.jpg', type:'gif', files:['assets/tech/shader1.gif'], desc:'Dissolve shader', meta:'ShaderGraph / HLSL' },
-    { id:'t-3', title:'Tool UI', thumb:'assets/tech/thumb3.jpg', type:'gif', files:['assets/tech/tool1.gif'], desc:'Editor tool - prefab baker', meta:'Editor Script' },
-    { id:'t-4', title:'WebGL Demo', thumb:'assets/tech/thumb4.jpg', type:'webgl', files:['https://your-simmer-or-github-page.example.com'], desc:'Interactive WebGL demo', meta:'WebGL build embed' },
-    { id:'t-5', title:'Breakdown', thumb:'assets/tech/thumb5.jpg', type:'image', files:['assets/tech/breakdown.jpg'], desc:'Breakdown images & diagrams', meta:'Documentation' }
-  ]
-};
-
-/* ---------------------------
-  3D viewer globals
-----------------------------*/
-let scene, camera, renderer, controls, pmremGenerator;
-let draco, gltfLoader, clock, mixer;
-let currentSceneModel = null;
-let envMap = null;
-
-/* ---------------------------
-  INIT  — setup UI & default open
-----------------------------*/
-function initUI(){
-  // initial = show left thumbs for '2d' section by default
-  createLeftThumbs('2d');
-  openSection('2d');
-
-  // prev / next handlers (moves within current section's projects)
-  prevBtn.addEventListener('click', ()=> { changeProject(-1); });
-  nextBtn.addEventListener('click', ()=> { changeProject(1); });
-
-  // allow keyboard left/right for navigation
-  window.addEventListener('keydown', (e)=>{
-    if(document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'TEXTAREA') return;
-    if(e.key === 'ArrowLeft') changeProject(-1);
-    if(e.key === 'ArrowRight') changeProject(1);
+    document.getElementById(target).classList.add("active");
+    link.classList.add("active");
   });
-}
+});
 
-/* ---------------------------
-  RENDER LEFT THUMBS
-----------------------------*/
-function createLeftThumbs(section){
-  leftSectionTitle.textContent = section.toUpperCase();
-  leftThumbsEl.innerHTML = '';
-  const arr = projects[section] || [];
-  arr.forEach((p,i)=>{
-    const el = document.createElement('div');
-    el.className = 'thumb-item';
-    el.dataset.index = i;
-    el.innerHTML = `
-      <img src="${p.thumb}" alt="${p.title}">
-      <div class="meta">
-        <div class="title">${p.title}</div>
-        <div class="sub">${p.meta}</div>
-      </div>
-    `;
-    el.addEventListener('click', ()=> {
-      setActiveProject(section, i);
-    });
-    leftThumbsEl.appendChild(el);
-  });
-}
+// ------- CARRUSEL 2D setup ---------
 
-/* ---------------------------
-  SET ACTIVE SECTION / PROJECT
-----------------------------*/
-function openSection(section){
-  activeSection = section;
+let images2D = [
+ "assets/2d/img1.jpg",
+ "assets/2d/img2.jpg",
+ "assets/2d/img3.jpg",
+ "assets/2d/img4.jpg",
+ "assets/2d/img5.jpg"
+];
+let index2D = 0;
 
-  // update left thumbs
-  createLeftThumbs(section);
+const thumbs2d = document.getElementById("thumbs2d");
+const top2d = document.getElementById("top2d");
+const view2d = document.getElementById("viewer2d");
 
-  // clear mini and viewer
-  miniRow.innerHTML = '';
-  hideAllViewers();
+function render2D() {
+  thumbs2d.innerHTML = "";
+  top2d.innerHTML = "";
 
-  // set first project active
-  activeIndex = 0;
-  renderMiniRow(section);
-  setActiveProject(section, activeIndex);
-}
+  images2D.forEach((img, i)=>{
+    let t = document.createElement("img");
+    t.src = img;
+    t.classList.toggle("active", i === index2D);
+    t.onclick = ()=>{ index2D=i; render2D(); };
+    thumbs2d.appendChild(t);
 
-/* ---------------------------
-  RENDER MINI-THUMBS (above viewer)
-----------------------------*/
-function renderMiniRow(section){
-  miniRow.innerHTML = '';
-  const arr = projects[section] || [];
-  arr.forEach((p, idx)=>{
-    const img = document.createElement('img');
-    img.className = 'mini-thumb';
-    img.src = p.thumb;
-    img.dataset.index = idx;
-    img.title = p.title;
-    img.addEventListener('click', ()=> setActiveProject(section, idx));
-    miniRow.appendChild(img);
-  });
-}
-
-/* ---------------------------
-  SET ACTIVE PROJECT
-----------------------------*/
-function setActiveProject(section, index){
-  activeSection = section;
-  activeIndex = index;
-
-  // update left active class
-  Array.from(leftThumbsEl.children).forEach((el, i)=> {
-    el.classList.toggle('active', i === index);
+    let tt = document.createElement("img");
+    tt.src = img;
+    tt.classList.toggle("active", i === index2D);
+    tt.onclick = ()=>{ index2D=i; render2D(); };
+    top2d.appendChild(tt);
   });
 
-  // update mini active thumb
-  Array.from(miniRow.children).forEach((el, i)=> el.classList.toggle('active', i === index));
+  view2d.src = images2D[index2D];
+}
+render2D();
 
-  // load project
-  const project = (projects[section] || [])[index];
-  if(!project) return;
-
-  // update description
-  projTitle.textContent = project.title;
-  projDesc.textContent = project.desc;
-  projMeta.textContent = project.meta || '';
-
-  // show spinner until loaded
-  showSpinner(true);
-
-  // depending on type: image / 3d / video / gif / webgl
-  if(project.type === 'image'){
-    loadImageProject(project);
-  } else if(project.type === '3d'){
-    load3DProject(project);
-  } else if(project.type === 'video'){
-    loadVideoProject(project);
-  } else if(project.type === 'gif'){
-    loadGifProject(project);
-  } else if(project.type === 'webgl'){
-    loadWebGLProject(project);
-  } else {
-    showSpinner(false);
-  }
+function next2D(){
+  index2D = (index2D+1) % images2D.length;
+  render2D();
+}
+function prev2D(){
+  index2D = (index2D-1+images2D.length)%images2D.length;
+  render2D();
 }
 
-/* ---------------------------
-  UI util: hide all viewer containers
-----------------------------*/
-function hideAllViewers(){
-  imageContainer.classList.add('hidden');
-  videoContainer.classList.add('hidden');
-  viewer3dEl.classList.add('hidden');
-  techContainer.classList.add('hidden');
-  // stop video
-  mainVideo.pause();
-  mainVideo.removeAttribute('src');
-  mainVideo.load();
-  // dispose 3D
-}
+// -------- Animation thumbnails -----
 
-/* ---------------------------
-  IMAGE project loader
-----------------------------*/
-function loadImageProject(project){
-  hideAllViewers();
-  imageContainer.classList.remove('hidden');
-  const src = project.files[0];
-  mainImage.src = src;
-  mainImage.onload = ()=> { showSpinner(false); };
-  mainImage.onerror = ()=> { showSpinner(false); console.error('Error loading image', src); };
-}
+let animFiles = [
+ "assets/anim/anim1.mp4",
+ "assets/anim/anim2.mp4",
+ "assets/anim/anim3.mp4",
+ "assets/anim/anim4.mp4",
+ "assets/anim/anim5.mp4",
+];
 
-/* ---------------------------
-  VIDEO project loader
-----------------------------*/
-function loadVideoProject(project){
-  hideAllViewers();
-  videoContainer.classList.remove('hidden');
-  const src = project.files[0];
-  mainVideo.src = src;
-  mainVideo.load();
-  // autoplay
-  mainVideo.oncanplay = ()=> { showSpinner(false); mainVideo.play().catch(()=>{}); };
-  mainVideo.onerror = ()=> { showSpinner(false); console.error('Error loading video', src); };
-}
+const thumbsAnim = document.getElementById("thumbsAnim");
+const videoPlayer = document.getElementById("videoPlayer");
 
-/* ---------------------------
-  GIF / TECH image loader
-----------------------------*/
-function loadGifProject(project){
-  hideAllViewers();
-  techContainer.classList.remove('hidden');
-  techContainer.innerHTML = '';
-  const el = document.createElement('img');
-  el.src = project.files[0];
-  el.style.maxWidth = '100%';
-  el.style.maxHeight = '100%';
-  el.style.objectFit = 'contain';
-  techContainer.appendChild(el);
-  el.onload = ()=> showSpinner(false);
-  el.onerror = ()=> { showSpinner(false); console.error('Error loading gif'); };
-}
+animFiles.forEach((file)=>{
+  let img = document.createElement("img");
+  img.src = "assets/anim/thumb.jpg"; // Temporal
+  img.onclick = ()=> videoPlayer.src = file;
+  thumbsAnim.appendChild(img);
+});
 
-/* ---------------------------
-  WebGL embed (iframe)
-----------------------------*/
-function loadWebGLProject(project){
-  hideAllViewers();
-  techContainer.classList.remove('hidden');
-  techContainer.innerHTML = '';
-  const iframe = document.createElement('iframe');
-  iframe.src = project.files[0];
-  iframe.style.width = '100%';
-  iframe.style.height = '100%';
-  iframe.style.border = '0';
-  techContainer.appendChild(iframe);
-  // iframe load event
-  iframe.onload = ()=> showSpinner(false);
-  iframe.onerror = ()=> { showSpinner(false); console.error('Error loading iframe'); };
-}
+videoPlayer.src = animFiles[0];
 
-/* ---------------------------
-  3D project loader (Three.js)
-----------------------------*/
-async function init3DIfNeeded(){
-  if(scene) return;
+// ---------- THREE JS 3D VIEWER -----------
 
-  // create renderer & scene
+let scene, camera, renderer, loader, mixer;
+let clock = new THREE.Clock();
+
+initViewer();
+loadModel("modelo1.glb");
+
+function initViewer(){
+  const cont = document.getElementById("modelViewer");
+
   scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x000000);
+  camera = new THREE.PerspectiveCamera(60, cont.clientWidth/cont.clientHeight, 0.1, 100);
+  camera.position.set(2,1,3);
 
-  const w = viewer3dEl.clientWidth || window.innerWidth;
-  const h = viewer3dEl.clientHeight || Math.max(400, window.innerHeight * 0.6);
+  renderer = new THREE.WebGLRenderer({antialias:true});
+  renderer.setSize(cont.clientWidth, cont.clientHeight);
+  cont.appendChild(renderer.domElement);
 
-  camera = new THREE.PerspectiveCamera(50, w/h, 0.05, 2000);
-  camera.position.set(2,1.5,3);
+  const light = new THREE.DirectionalLight(0xffffff, 1);
+  light.position.set(3,3,3);
+  scene.add(light);
+  scene.add(new THREE.AmbientLight(0xffffff, 0.4));
 
-  renderer = new THREE.WebGLRenderer({ antialias:true, alpha:false });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.setSize(w,h,false);
-  renderer.outputEncoding = THREE.sRGBEncoding;
+  loader = new THREE.GLTFLoader();
 
-  // attach
-  viewer3dEl.innerHTML = '';
-  viewer3dEl.appendChild(renderer.domElement);
-
-  controls = new OrbitControls(camera, renderer.domElement);
-  controls.enableDamping = true;
-
-  // lights
-  const hemiL = new THREE.HemisphereLight(0xffffff, 0x222222, 1.0);
-  hemi = hemiL;
-  scene.add(hemiL);
-  dir = new THREE.DirectionalLight(0xffffff, 1.2);
-  dir.position.set(5,10,7);
-  scene.add(dir);
-
-  // PMREM for HDRI
-  pmremGenerator = new THREE.PMREMGenerator(renderer);
-  pmremGenerator.compileEquirectangularShader();
-
-  // loaders
-  draco = new DRACOLoader();
-  draco.setDecoderPath('https://www.gstatic.com/draco/v1/decoders/');
-  gltfLoader = new GLTFLoader();
-  gltfLoader.setDRACOLoader(draco);
-
-  clock = new THREE.Clock();
-
-  window.addEventListener('resize', onWindowResize3D);
-
-  animate3D();
-}
-
-/* ---------------------------
-  Load GLB model
-----------------------------*/
-function load3DProject(project){
-  init3DIfNeeded().then(()=>{
-    hideAllViewers();
-    viewer3dEl.classList.remove('hidden');
-    showSpinner(true);
-
-    // dispose previous model
-    if(currentSceneModel){
-      scene.remove(currentSceneModel);
-      disposeObject(currentSceneModel);
-      currentSceneModel = null;
-      mixer = null;
-    }
-
-    const path = project.files[0];
-    gltfLoader.load(path,
-      (gltf)=>{
-        showSpinner(false);
-        currentSceneModel = gltf.scene;
-        scene.add(currentSceneModel);
-
-        // animations
-        if(gltf.animations && gltf.animations.length){
-          mixer = new THREE.AnimationMixer(currentSceneModel);
-          mixer.clipAction(gltf.animations[0]).play();
-        }
-
-        // normalize scale & center
-        const box = new THREE.Box3().setFromObject(currentSceneModel);
-        const size = box.getSize(new THREE.Vector3());
-        const maxDim = Math.max(size.x, size.y, size.z);
-        const scale = maxDim > 0 ? (1.6 / maxDim) : 1;
-        currentSceneModel.scale.setScalar(scale);
-        box.setFromObject(currentSceneModel);
-        const center = box.getCenter(new THREE.Vector3());
-        currentSceneModel.position.sub(center);
-
-        // camera framing
-        const dist = Math.max(1.2, 2.0 / scale);
-        camera.position.set(dist, dist, dist);
-        controls.target.set(0,0,0);
-        controls.update();
-      },
-      (xhr)=> {
-        // progress (optional)
-        // console.log((xhr.loaded/xhr.total)*100 + '% loaded');
-      },
-      (err)=>{
-        showSpinner(false);
-        console.error('Error loading gltf', err);
-      }
-    );
-  });
-}
-
-/* ---------------------------
-  3D animation loop
-----------------------------*/
-function animate3D(){
-  requestAnimationFrame(animate3D);
-  if(renderer && scene && camera){
-    const delta = clock ? clock.getDelta() : 0.016;
-    if(mixer) mixer.update(delta);
-    controls && controls.update();
+  function animate(){
+    requestAnimationFrame(animate);
+    let delta = clock.getDelta();
+    if (mixer) mixer.update(delta);
     renderer.render(scene, camera);
   }
+  animate();
 }
 
-/* ---------------------------
-  3D helpers
-----------------------------*/
-function onWindowResize3D(){
-  if(!renderer || !camera) return;
-  const w = viewer3dEl.clientWidth || window.innerWidth;
-  const h = viewer3dEl.clientHeight || Math.max(400, window.innerHeight * 0.6);
-  camera.aspect = w/h;
-  camera.updateProjectionMatrix();
-  renderer.setSize(w,h,false);
-}
-
-function disposeObject(obj){
-  if(!obj) return;
-  obj.traverse((c)=>{
-    if(c.isMesh){
-      if(c.geometry) c.geometry.dispose();
-      if(c.material){
-        if(Array.isArray(c.material)){
-          c.material.forEach(m=>{ if(m.map) m.map.dispose(); m.dispose(); });
-        } else {
-          if(c.material.map) c.material.map.dispose();
-          c.material.dispose();
-        }
-      }
-    }
+function loadModel(file){
+  if(!loader) return;
+  loader.load("assets/models/"+file, glb=>{
+    while(scene.children.length > 2) scene.remove(scene.children[2]);
+    let model = glb.scene;
+    scene.add(model);
+    mixer = glb.animations.length ? new THREE.AnimationMixer(model) : null;
+    if(mixer) mixer.clipAction(glb.animations[0]).play();
   });
 }
 
-/* ---------------------------
-  navigation helpers
-----------------------------*/
-function changeProject(offset){
-  const arr = projects[activeSection] || [];
-  if(!arr.length) return;
-  let idx = activeIndex + offset;
-  if(idx < 0) idx = arr.length -1;
-  if(idx >= arr.length) idx = 0;
-  setActiveProject(activeSection, idx);
-}
-
-/* ---------------------------
-  spinner UI
-----------------------------*/
-function showSpinner(yes){
-  spinner.style.display = yes ? 'block' : 'none';
-}
-
-/* ---------------------------
-  initial auto-load first model of section when opening the section
-----------------------------*/
-function openSection(name){
-  // expose to nav
-  openSectionInternal(name);
-}
-
-function openSectionInternal(name){
-  // global function called from nav - keep old function name for compatibility
-  openSectionInternal = null; // not needed
-}
-
-/* ---------------------------
-  Public openSection wrapper used in nav
-----------------------------*/
-window.openSection = function(name){
-  // change activeSection visually
-  activeSection = name;
-
-  // update left column thumbs and mini row
-  createLeftThumbs(name);
-  renderMiniRow(name);
-
-  // set active project to first
-  activeIndex = 0;
-  setActiveProject(name, 0);
-};
-
-/* ---------------------------
-  initial UI boot
-----------------------------*/
-initUI();
-
-/* ---------------------------
-  Auto-load first model of each section when user first opens it:
-  (the nav triggers window.openSection which calls setActiveProject)
-----------------------------*/
-
-/* ---------------------------
-  END MODULE
-----------------------------*/
 </script>
+
+<!-- LIBS THREE -->
+<script src="https://unpkg.com/three@0.160.0/build/three.min.js"></script>
+<script src="https://unpkg.com/three@0.160.0/examples/js/loaders/GLTFLoader.js"></script>
+
 </body>
 </html>
