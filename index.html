@@ -368,27 +368,125 @@
 
 <!-- ======================= 2D ========================= -->
 
-<section id="2d">
-  <h2>Portfolio 2D</h2>
+<script>
+// =====================  PROYECTOS  ==============================
 
-  <div class="two-column">
+// ACA DEFINIS TUS CARPETAS DE PROYECTO
+// Cada proyecto es una carpeta dentro de assets/projects/PROYECTO/
 
-    <div class="thumbs" id="thumbs2d"></div>
+const projects = [
+  {
+    name: "Proyecto A",
+    folder: "proyectoA",
+    images: ["1.jpg", "2.jpg", "3.jpg", "4.jpg"],
+    desc: "Descripción temporal del Proyecto A."
+  },
+  {
+    name: "Proyecto B",
+    folder: "proyectoB",
+    images: ["1.jpg", "2.jpg", "3.jpg"],
+    desc: "Descripción temporal del Proyecto B."
+  },
+  {
+    name: "Proyecto C",
+    folder: "proyectoC",
+    images: ["1.jpg", "2.jpg"],
+    desc: "Descripción temporal del Proyecto C."
+  },
+  {
+    name: "Proyecto D",
+    folder: "proyectoD",
+    images: ["1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg"],
+    desc: "Descripción temporal del Proyecto D."
+  },
+  {
+    name: "Proyecto E",
+    folder: "proyectoE",
+    images: ["1.jpg"],
+    desc: "Descripción temporal del Proyecto E."
+  }
+];
 
-    <div class="viewer">
-      <div class="top-thumbs" id="top2d"></div>
+let currentProject = null;
+let currentImageIndex = 0;
 
-      <div class="viewer-controls">
-        <button onclick="prev2D()">◀</button>
-        <button onclick="next2D()">▶</button>
+const projectList = document.getElementById("thumbProjects");
+const projectTop = document.getElementById("projectTopThumbs");
+const projectView = document.getElementById("projectViewer");
+const projectDesc = document.getElementById("projectDesc");
+
+// Renderiza la lista de proyectos (lado izquierdo)
+function renderProjectList() {
+  projectList.innerHTML = "";
+
+  projects.forEach((p, index) => {
+    let thumb = document.createElement("div");
+    thumb.innerHTML = `
+      <div style="
+        width:100%; height:120px; background:#222; 
+        border-radius:8px; margin-bottom:15px;
+        display:flex; align-items:center; justify-content:center;
+        color:#4cc2ff; cursor:pointer; border:1px solid #333;
+      ">
+        ${p.name}
       </div>
+    `;
+    thumb.onclick = () => loadProject(index);
+    projectList.appendChild(thumb);
+  });
+}
 
-      <img id="viewer2d" src="">
-      <div class="desc" id="desc2d">Descripción del proyecto aquí…</div>
-    </div>
+// Cargar un proyecto
+function loadProject(i) {
+  currentProject = projects[i];
+  currentImageIndex = 0;
 
-  </div>
-</section>
+  projectDesc.textContent = currentProject.desc;
+  renderProjectTopThumbs();
+  updateProjectViewer();
+}
+
+// Render de thumbnails horizontales del proyecto seleccionado
+function renderProjectTopThumbs() {
+  projectTop.innerHTML = "";
+
+  currentProject.images.forEach((img, i) => {
+    let t = document.createElement("img");
+    t.src = `assets/projects/${currentProject.folder}/${img}`;
+    t.classList.toggle("active", i === currentImageIndex);
+    t.onclick = () => {
+      currentImageIndex = i;
+      updateProjectViewer();
+      renderProjectTopThumbs();
+    };
+    projectTop.appendChild(t);
+  });
+}
+
+// Actualizar imagen grande
+function updateProjectViewer() {
+  projectView.src = `assets/projects/${currentProject.folder}/${currentProject.images[currentImageIndex]}`;
+}
+
+// Controles
+function nextProjectImage() {
+  if (!currentProject) return;
+  currentImageIndex = (currentImageIndex + 1) % currentProject.images.length;
+  updateProjectViewer();
+  renderProjectTopThumbs();
+}
+
+function prevProjectImage() {
+  if (!currentProject) return;
+  currentImageIndex = (currentImageIndex - 1 + currentProject.images.length) % currentProject.images.length;
+  updateProjectViewer();
+  renderProjectTopThumbs();
+}
+
+// Iniciar lista
+renderProjectList();
+</script>
+
 
 <!-- ======================= 3D ========================= -->
 
