@@ -485,49 +485,130 @@ links.forEach(link=>{
 
 // ------- CARRUSEL 2D setup ---------
 
-let images2D = [
- "assets/2d/img1.png",
- "assets/2d/img2.png",
- "assets/2d/img3.png",
- "assets/2d/img4.png",
- "assets/2d/img5.png"
+<script>
+// ===================== PROYECTOS 2D =============================
+
+// ✔ Cada proyecto tiene:
+//   - nombre
+//   - descripción
+//   - thumbnail (miniatura principal)
+//   - imágenes internas (carrusel)
+
+// 👉 Podés agregar más proyectos sin tocar el código,
+//    solo duplicar un bloque dentro del array.
+const projects2D = [
+  {
+    name: "Proyecto 1",
+    desc: "Descripción del proyecto 1...",
+    thumb: "assets/2d/proj1/thumb.jpg",
+    images: [
+      "assets/2d/proj1/img1.jpg",
+      "assets/2d/proj1/img2.jpg",
+      "assets/2d/proj1/img3.jpg"
+    ]
+  },
+  {
+    name: "Proyecto 2",
+    desc: "Descripción del proyecto 2...",
+    thumb: "assets/2d/proj2/thumb.jpg",
+    images: [
+      "assets/2d/proj2/img1.jpg",
+      "assets/2d/proj2/img2.jpg"
+    ]
+  },
+  {
+    name: "Proyecto 3",
+    desc: "Descripción del proyecto 3...",
+    thumb: "assets/2d/proj3/thumb.jpg",
+    images: [
+      "assets/2d/proj3/img1.png",
+      "assets/2d/proj3/img2.png",
+      "assets/2d/proj3/img3.png",
+      "assets/2d/proj3/img4.png"
+    ]
+  }
 ];
-let index2D = 0;
 
-const thumbs2d = document.getElementById("thumbs2d");
-const top2d = document.getElementById("top2d");
-const view2d = document.getElementById("viewer2d");
+// ------------------ Referencias DOM ------------------
 
-function render2D() {
-  thumbs2d.innerHTML = "";
-  top2d.innerHTML = "";
+const thumbProjects = document.getElementById("thumbProjects");
+const projectTopThumbs = document.getElementById("projectTopThumbs");
+const projectViewer = document.getElementById("projectViewer");
+const projectDesc = document.getElementById("projectDesc");
 
-  images2D.forEach((img, i)=>{
-    let t = document.createElement("img");
+let currentProject = 0;
+let currentImage = 0;
+
+// ------------------ Renderizado de proyectos ------------------
+
+function renderProjectList() {
+  thumbProjects.innerHTML = "";
+
+  projects2D.forEach((proj, index) => {
+    const img = document.createElement("img");
+    img.src = proj.thumb;
+    img.classList.add("project-thumb");
+    if (index === currentProject) img.classList.add("active");
+
+    img.onclick = () => {
+      currentProject = index;
+      currentImage = 0;
+      renderProjectView();
+      renderProjectList();
+    };
+
+    thumbProjects.appendChild(img);
+  });
+}
+
+// ------------------ Render del viewer ------------------
+
+function renderProjectView() {
+  const proj = projects2D[currentProject];
+
+  // Thumbs superiores
+  projectTopThumbs.innerHTML = "";
+  proj.images.forEach((img, i) => {
+    const t = document.createElement("img");
     t.src = img;
-    t.classList.toggle("active", i === index2D);
-    t.onclick = ()=>{ index2D=i; render2D(); };
-    thumbs2d.appendChild(t);
-
-    let tt = document.createElement("img");
-    tt.src = img;
-    tt.classList.toggle("active", i === index2D);
-    tt.onclick = ()=>{ index2D=i; render2D(); };
-    top2d.appendChild(tt);
+    t.classList.toggle("active", i === currentImage);
+    t.onclick = () => {
+      currentImage = i;
+      renderProjectView();
+    };
+    projectTopThumbs.appendChild(t);
   });
 
-  view2d.src = images2D[index2D];
-}
-render2D();
+  // Imagen principal
+  projectViewer.src = proj.images[currentImage];
 
-function next2D(){
-  index2D = (index2D+1) % images2D.length;
-  render2D();
+  // Descripción
+  projectDesc.innerHTML = `
+    <h3>${proj.name}</h3>
+    <p>${proj.desc}</p>
+  `;
 }
-function prev2D(){
-  index2D = (index2D-1+images2D.length)%images2D.length;
-  render2D();
-}
+
+// ------------------ Navegación interna ------------------
+
+window.nextProjectImage = () => {
+  const proj = projects2D[currentProject];
+  currentImage = (currentImage + 1) % proj.images.length;
+  renderProjectView();
+};
+
+window.prevProjectImage = () => {
+  const proj = projects2D[currentProject];
+  currentImage = (currentImage - 1 + proj.images.length) % proj.images.length;
+  renderProjectView();
+};
+
+// ------------------ Inicializar ------------------
+
+renderProjectList();
+renderProjectView();
+
+</script>
 
 // -------- Animation thumbnails -----
 
