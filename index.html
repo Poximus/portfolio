@@ -540,11 +540,6 @@ links.forEach(link=>{
     document.getElementById(target).classList.add("active");
     link.classList.add("active");
 
-    // 👇👇👇 **ESTO ES LO IMPORTANTE**
-    // Renderiza los thumbnails SOLO cuando la sección se vuelve visible
-    if (target === "animation") {
-        renderAnimationThumbs();
-    }
   });
 });
 
