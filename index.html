@@ -324,15 +324,28 @@
 
   /* ------------- ANIMATION ---------------- */
 
-  #animation video {
-    width:100%;
-    border-radius:8px;
-  }
+ /* Thumbnails de animación */
+#animation .thumbs img {
+  height: 100px;
+  object-fit: cover;
+  opacity: 0.7;
+  transition: 0.2s;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 2px solid transparent;
+}
 
-  #animation .thumbs img {
-    height:100px;
-    object-fit:cover;
-  }
+#animation .thumbs img:hover {
+  opacity: 1;
+  transform: scale(1.02);
+}
+
+/* Highlight azul */
+#animation .thumbs img.active {
+  opacity: 1;
+  border: 2px solid #4cc2ff;
+}
+
 
   /* ----------- TECH ART ------------ */
   .tech-grid {
@@ -658,37 +671,69 @@ renderProjectView();
 let animFiles = [
   {
     file: "assets/anim/video1.mp4",
-    thumb: "assets/anim/thumb1.jpg"
+    thumb: "assets/anim/thumb1.jpg",
+    desc: "Animación 1 — breve descripción del estilo o pipeline."
   },
   {
     file: "assets/anim/video2.mp4",
-    thumb: "assets/anim/thumb2.jpg"
+    thumb: "assets/anim/thumb2.jpg",
+    desc: "Animación 2 — descripción del proyecto o técnica utilizada."
   },
   {
     file: "assets/anim/video3.mp4",
-    thumb: "assets/anim/thumb3.jpg"
+    thumb: "assets/anim/thumb3.jpg",
+    desc: "Animación 3 — captura facial, rigging, o motion experimental."
   },
   {
     file: "assets/anim/video4.mp4",
-    thumb: "assets/anim/thumb4.jpg"
+    thumb: "assets/anim/thumb4.jpg",
+    desc: "Animación 4 — animación estilizada o cartoon."
   },
   {
     file: "assets/anim/video5.mp4",
-    thumb: "assets/anim/thumb5.jpg"
+    thumb: "assets/anim/thumb5.jpg",
+    desc: "Animación 5 — FX, simulación o técnica avanzada."
   }
 ];
 
 
-thumbsAnim.innerHTML = "";
 
-animFiles.forEach((vid)=>{
-  let img = document.createElement("img");
-  img.src = vid.thumb;
-  img.onclick = ()=> videoPlayer.src = vid.file;
-  thumbsAnim.appendChild(img);
-});
+const thumbsAnim = document.getElementById("thumbsAnim");
+const videoPlayer = document.getElementById("videoPlayer");
+const descAnim = document.getElementById("descAnim");
 
-videoPlayer.src = animFiles[0].file;
+function renderAnimationThumbs() {
+  thumbsAnim.innerHTML = "";
+
+  animFiles.forEach((vid, index)=>{
+    let img = document.createElement("img");
+    img.src = vid.thumb;
+    img.classList.add("anim-thumb");
+
+    // Set highlight on selected
+    if (index === 0) img.classList.add("active");
+
+    img.onclick = ()=>{
+      // Update player
+      videoPlayer.src = vid.file;
+      descAnim.textContent = vid.desc;
+
+      // Update highlight
+      document.querySelectorAll(".anim-thumb")
+        .forEach(t=>t.classList.remove("active"));
+      img.classList.add("active");
+    };
+
+    thumbsAnim.appendChild(img);
+  });
+
+  // Load first video by default
+  videoPlayer.src = animFiles[0].file;
+  descAnim.textContent = animFiles[0].desc;
+}
+
+renderAnimationThumbs();
+
 
 
 </script> 
