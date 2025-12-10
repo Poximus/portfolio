@@ -88,7 +88,7 @@
     font-size:18px;
     line-height:1.6;
   }
-  /* HOME GRID */
+  /* HOME GRID */F
 .home-flex {
   display: grid;
   grid-template-columns: 0.5fr 2fr 0.5fr; /* izquierda - centro - derecha */
@@ -415,25 +415,21 @@
     <div class="thumbs" id="thumbProjects"></div>
 
     <!-- VISUALIZADOR -->
-    <div class="viewer">
-      <div id="viewer2d">
-  <span class="arrow arrow-left" onclick="prevImage()">❮</span>
-  <img id="mainImage" src="assets/2d/img1.jpg">
-  <span class="arrow arrow-right" onclick="nextImage()">❯</span>
-</div>
-
-
-      <!-- THUMBS SUPERIORES DEL PROYECTO -->
+    <div class="viewer">     
+     <!-- THUMBS SUPERIORES DEL PROYECTO -->
       <div class="top-thumbs" id="projectTopThumbs"></div>
 
       <!-- BOTONES -->
-      <div class="viewer-controls">
-        <button onclick="prevProjectImage()">◀</button>
-        <button onclick="nextProjectImage()">▶</button>
-      </div>
+      <div style="position:relative;">
+        <img id="projectViewer" src="">
+        <div class="arrow arrow-left" onclick="prevProjectImage()">❮</div>
+        <div class="arrow arrow-right" onclick="nextProjectImage()">❯</div>
+    </div>
 
       <!-- IMAGEN GRANDE -->
       <img id="projectViewer" src="">
+      <div class="arrow arrow-left" onclick="prevProjectImage()">❮</div>
+      <div class="arrow arrow-right" onclick="nextProjectImage()">❯</div>
 
       <!-- DESCRIPCIÓN -->
       <div class="desc" id="projectDesc">Selecciona un proyecto…</div>
