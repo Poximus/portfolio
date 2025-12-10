@@ -325,8 +325,9 @@
   /* ------------- ANIMATION ---------------- */
 
  /* Thumbnails de animación */
-#animation .thumbs img {
+.anim-thumb {
   height: 100px;
+  width: 100%;
   object-fit: cover;
   opacity: 0.7;
   transition: 0.2s;
@@ -335,16 +336,16 @@
   border: 2px solid transparent;
 }
 
-#animation .thumbs img:hover {
+.anim-thumb:hover {
   opacity: 1;
   transform: scale(1.02);
 }
 
-/* Highlight azul */
-#animation .thumbs img.active {
+.anim-thumb.active {
   opacity: 1;
   border: 2px solid #4cc2ff;
 }
+
 
 
   /* ----------- TECH ART ------------ */
