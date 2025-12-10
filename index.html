@@ -534,11 +534,19 @@ links.forEach(link=>{
     e.preventDefault();
     const target = link.dataset.target;
 
+    // Oculta todas las secciones
     sections.forEach(sec=>sec.classList.remove("active"));
     links.forEach(l=>l.classList.remove("active"));
 
+    // Activa la sección seleccionada
     document.getElementById(target).classList.add("active");
     link.classList.add("active");
+
+    // 👇👇👇 **ESTO ES LO IMPORTANTE**
+    // Renderiza los thumbnails SOLO cuando la sección se vuelve visible
+    if (target === "animation") {
+        renderAnimationThumbs();
+    }
   });
 });
 
