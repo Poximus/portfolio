@@ -679,17 +679,16 @@ let animFiles = [
 ];
 
 
-const thumbsAnim = document.getElementById("thumbsAnim");
-const videoPlayer = document.getElementById("videoPlayer");
+thumbsAnim.innerHTML = "";
 
-animFiles.forEach((file)=>{
+animFiles.forEach((vid)=>{
   let img = document.createElement("img");
-  img.src = "assets/anim/thumb.jpg"; // Temporal
-  img.onclick = ()=> videoPlayer.src = file;
+  img.src = vid.thumb;
+  img.onclick = ()=> videoPlayer.src = vid.file;
   thumbsAnim.appendChild(img);
 });
 
-videoPlayer.src = animFiles[0];
+videoPlayer.src = animFiles[0].file;
 
 
 </script> 
