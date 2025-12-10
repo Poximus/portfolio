@@ -656,12 +656,28 @@ renderProjectView();
 // -------- Animation thumbnails -----
 
 let animFiles = [
- "assets/anim/video1.mp4",
- "assets/anim/video2.mp4",
- "assets/anim/video3.mp4",
- "assets/anim/video4.mp4",
- "assets/anim/video5.mp4",
+  {
+    file: "assets/anim/video1.mp4",
+    thumb: "assets/anim/thumb1.jpg"
+  },
+  {
+    file: "assets/anim/video2.mp4",
+    thumb: "assets/anim/thumb2.jpg"
+  },
+  {
+    file: "assets/anim/video3.mp4",
+    thumb: "assets/anim/thumb3.jpg"
+  },
+  {
+    file: "assets/anim/video4.mp4",
+    thumb: "assets/anim/thumb4.jpg"
+  },
+  {
+    file: "assets/anim/video5.mp4",
+    thumb: "assets/anim/thumb5.jpg"
+  }
 ];
+
 
 const thumbsAnim = document.getElementById("thumbsAnim");
 const videoPlayer = document.getElementById("videoPlayer");
