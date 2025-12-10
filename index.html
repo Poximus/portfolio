@@ -195,6 +195,44 @@
 
 
   /* ------------ 2D SECTION -------------- */
+#viewer2d {
+  position: relative;
+  width: 100%;
+  max-width: 700px;
+  margin: auto;
+}
+
+#viewer2d img {
+  width: 100%;
+  display: block;
+}
+
+/* Flechas sobre la imagen */
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 50px;
+  color: white;
+  text-shadow: 0px 0px 10px black;
+  cursor: pointer;
+  z-index: 10;
+  padding: 10px;
+  transition: 0.2s;
+}
+
+.arrow:hover {
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* Posiciones */
+.arrow-left {
+  left: 10px;
+}
+
+.arrow-right {
+  right: 10px;
+}
 
   .two-column {
     display:flex;
@@ -378,6 +416,12 @@
 
     <!-- VISUALIZADOR -->
     <div class="viewer">
+      <div id="viewer2d">
+  <span class="arrow arrow-left" onclick="prevImage()">❮</span>
+  <img id="mainImage" src="assets/2d/img1.jpg">
+  <span class="arrow arrow-right" onclick="nextImage()">❯</span>
+</div>
+
 
       <!-- THUMBS SUPERIORES DEL PROYECTO -->
       <div class="top-thumbs" id="projectTopThumbs"></div>
